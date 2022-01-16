@@ -1,17 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:kakeibo_ui/src/services/locator.dart';
 
-/// A service that stores and retrieves user settings.
-///
-/// By default, this class does not persist user settings. If you'd like to
-/// persist the user settings locally, use the shared_preferences package. If
-/// you'd like to store settings on a web server, use the http package.
 class SettingsService {
-  /// Loads the User's preferred ThemeMode from local or remote storage.
-  Future<ThemeMode> themeMode() async => ThemeMode.system;
+  Future<ThemeMode> themeMode() async {
+    String? themeValue =
+        await serviceLocator.get<FlutterSecureStorage>().read(key: 'theme');
 
-  /// Persists the user's preferred ThemeMode to local or remote storage.
+    if (themeValue == 'dark') {
+      return ThemeMode.dark;
+    } else if (themeValue == 'light') {
+      return ThemeMode.light;
+    }
+
+    return ThemeMode.system;
+  }
+
   Future<void> updateThemeMode(ThemeMode theme) async {
-    // Use the shared_preferences package to persist settings locally or the
-    // http package to persist settings over the network.
+    String themeName = 'system';
+
+    if (theme == ThemeMode.light) {
+      themeName = 'light';
+    } else if (theme == ThemeMode.dark) {
+      themeName = 'dark';
+    }
+
+    await serviceLocator
+        .get<FlutterSecureStorage>()
+        .write(key: 'theme', value: themeName);
   }
 }

@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/decoration/date_util.dart';
-import 'package:kakeibo_ui/src/decoration/format_util.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/burndown_widget.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/day_detail_widget.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/diff_widget.dart';
+import 'package:kakeibo_ui/src/period_list/widgets/day_list_item_widget.dart';
 import 'package:kakeibo_ui/src/period_list/widgets/period_chart_widget.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/projection_widget.dart';
 import 'package:kakeibo_ui/src/services/graphql_services.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 
@@ -43,8 +38,8 @@ class PeriodDetailState extends State<PeriodDetailsView> {
 
       int? budget = _period.fullDays[i].budget;
 
-      _remainingValues.add(budget);
-      _projectedValues.add(budget == null ? null : projection(budget));
+      _remainingValues.add(remainingUseable(budget));
+      _projectedValues.add(budget == null ? null : projection(i));
     }
   }
 
@@ -87,51 +82,20 @@ class PeriodDetailState extends State<PeriodDetailsView> {
     return budget - _period.limit();
   }
 
-  // TODO: Code smell. Shouldn't be nullable.
-  int? projection(int? budget) {
-    if (budget == null) return null;
-    return budget - _period.useablePerDay();
+  int projection(int index) {
+    return _period.useable() - (index * _period.useablePerDay());
   }
 
-  // TODO: This widget can be put in a different file. Note: the function that returns the widget is still necessary though.
   Widget listItem(BuildContext context, int index) {
     final day = _period.fullDays[index];
 
-    Widget card = Card(
-      child: Row(
-        children: <Widget>[
-          Container(
-            margin: const EdgeInsets.all(20),
-            child: const Icon(Icons.view_day, color: Colors.pink, size: 24.0),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Column(children: [
-              Text(DateUtil.formatDate(day.dayDate!)),
-              Text(day.memo, style: const TextStyle(color: Colors.grey)),
-            ]),
-          ),
-          Text(FormatUtil.formatNumberCurrency(day.budget)),
-          ProjectionWidget(remainingUseable(day.budget)),
-          ProjectionWidget(projection(day.budget)),
-          DiffWidget(diffValue(index)),
-          BurndownWidget(burndownBudget(index))
-        ],
-      ),
-    );
-
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) {
-                  return DayDetailWidget(
-                      burndown: burndownBudget(index), diff: diffValue(index));
-                },
-                fullscreenDialog: true));
-      },
-      child: card,
+    return DayListItemWidget(
+      period: _period,
+      day: day,
+      burndown: burndownBudget(index),
+      projection: projection(index),
+      remaining: remainingUseable(day.budget),
+      diff: diffValue(index),
     );
   }
 

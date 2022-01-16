@@ -2,6 +2,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
+import 'package:kakeibo_ui/src/models/day.dart';
+import 'package:kakeibo_ui/src/models/expense.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:path/path.dart' as path;
@@ -55,6 +57,41 @@ class GraphQLServices {
     }
   """;
 
+  final _createExpenseQuery = """
+    mutation CreateExpense(\$input: ExpensesCreateInput!) {
+      createExpense(input: \$input) {
+        id
+        dayDate
+        expenses {
+          id
+          label
+          cost
+        }
+      }
+    }
+  """;
+
+  final _upsertDayQuery = """
+    mutation UpsertDayQuery(\$input: DaysUpsertInput!) {
+      upsertDay(input: \$input) {
+        id
+        budget
+        memo
+        dayDate
+      }
+    }
+  """;
+
+  final _destroyExpenseQuery = """
+    mutation DestroyExpense(\$input: ExpensesDestroyInput!) {
+      destroyExpense(input: \$input) {
+        id
+        cost
+        label
+      }
+    }
+  """;
+
   final _fetchOnePeriodQuery = """
     query FetchOnePeriod(\$id: ID!) {
     fetchOnePeriod(id: \$id) {
@@ -71,6 +108,11 @@ class GraphQLServices {
         memo
         dayDate
         budget
+        expenses {
+          id
+          label
+          cost
+        }
       }
     }
   }
@@ -115,5 +157,67 @@ class GraphQLServices {
         document: gql(_createPeriodQuery), variables: {'input': vars});
 
     return await _client!.query(opt);
+  }
+
+  Future<Day> createExpense(
+      Period period, Day day, String label, int cost) async {
+    var vars = {
+      'input': {
+        'label': label,
+        'cost': cost,
+        'periodId': period.id!,
+        'dayDate': DateUtil.formatDate(day.dayDate)
+      }
+    };
+
+    final QueryOptions opt =
+        QueryOptions(document: gql(_createExpenseQuery), variables: vars);
+
+    final QueryResult result = await _client!.query(opt);
+
+    if (result.data == null) {
+      return Future.error('Error happened ${result.exception.toString()}');
+    } else {
+      return Day.fromJson(result.data!['createExpense']);
+    }
+  }
+
+  Future<Day> upsertDay(Period period, Day day, int budget, String memo) async {
+    var vars = {
+      'input': {
+        'budget': budget,
+        'memo': memo,
+        'periodId': period.id!,
+        'dayDate': DateUtil.formatDate(day.dayDate)
+      }
+    };
+
+    final QueryOptions opt =
+        QueryOptions(document: gql(_upsertDayQuery), variables: vars);
+
+    final QueryResult result = await _client!.query(opt);
+
+    if (result.data == null) {
+      return Future.error('Error happened');
+    } else {
+      return Day.fromJson(result.data!['upsertDay']);
+    }
+  }
+
+  Future<Expense> destroyExpense(int expenseId) async {
+    var vars = {
+      'input': {'id': expenseId}
+    };
+
+    final QueryOptions opt =
+        QueryOptions(document: gql(_destroyExpenseQuery), variables: vars);
+
+    final QueryResult result = await _client!.query(opt);
+
+    if (result.data == null) {
+      return Future.error('Error happened');
+    } else {
+      return Expense.fromJson(result.data!['destroyExpense']);
+    }
   }
 }

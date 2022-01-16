@@ -49,6 +49,7 @@ class _BarChartWidget extends StatelessWidget {
     List<_Bar> burndownData = [];
     List<_Bar> remainingData = [];
 
+    // TODO: Add correct labels (if it gets too crowded, then remove them).
     for (int i = 0; i < n; i++) {
       projectionData.add(_Bar(i.toString(), projectedValues[i]));
       burndownData.add(_Bar(i.toString(), burndownValues[i]));
@@ -57,7 +58,7 @@ class _BarChartWidget extends StatelessWidget {
 
     _seriesList = [
       charts.Series<_Bar, String>(
-          id: 'projection',
+          id: 'Projection',
           colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
           domainFn: (_Bar sales, _) => sales.label,
           measureFn: (_Bar sales, _) => sales.value,
@@ -82,6 +83,7 @@ class _BarChartWidget extends StatelessWidget {
     return charts.OrdinalComboChart(
       _seriesList,
       animate: _animate,
+      behaviors: [new charts.SeriesLegend()],
       defaultRenderer: charts.BarRendererConfig(
           groupingType: charts.BarGroupingType.grouped),
     );

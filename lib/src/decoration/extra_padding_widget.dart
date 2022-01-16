@@ -7,7 +7,8 @@ class ExtraPadding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 20.0, left: 20.0),
+      padding: const EdgeInsets.only(
+          right: 20.0, left: 20.0, top: 10.0, bottom: 10.0),
       child: child,
     );
   }

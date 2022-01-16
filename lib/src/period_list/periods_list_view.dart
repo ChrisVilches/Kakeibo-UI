@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import '../decoration/loading_icon_widget.dart';
 import '../services/graphql_services.dart';
@@ -45,6 +46,11 @@ class PeriodListState extends State<PeriodsListView> {
     });
   }
 
+  // TODO: Does not work
+  Future<void> _pullRefresh() async {
+    debugPrint("REFRESHING.....");
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -85,26 +91,30 @@ class PeriodListState extends State<PeriodsListView> {
           ),
         ],
       ),
-      body: ListView.builder(
-        // Providing a restorationId allows the ListView to restore the
-        // scroll position when a user leaves and returns to the app after it
-        // has been killed while running in the background.
-        restorationId: 'PeriodsListView',
-        itemCount: _periods.length,
-        itemBuilder: (BuildContext context, int index) {
-          final period = _periods[index];
+      body: RefreshIndicator(
+        onRefresh: _pullRefresh,
+        child: ListView.builder(
+          // Providing a restorationId allows the ListView to restore the
+          // scroll position when a user leaves and returns to the app after it
+          // has been killed while running in the background.
+          restorationId: 'PeriodsListView',
+          itemCount: _periods.length,
+          itemBuilder: (BuildContext context, int index) {
+            final period = _periods[index];
 
-          return ListTile(
-              title: Text('${period.name}'),
-              subtitle: Text('${period.dateFrom} - ${period.dateTo}'),
-              leading: const Icon(Icons.monetization_on_outlined,
-                  color: Colors.pink, size: 24.0),
-              onTap: () {
-                Navigator.restorablePushNamed(
-                    context, PeriodDetailsView.routeName,
-                    arguments: {'id': period.id});
-              });
-        },
+            return ListTile(
+                title: Text('${period.name}'),
+                subtitle: Text(
+                    '${DateUtil.formatDate(period.dateFrom!)} - ${DateUtil.formatDate(period.dateTo!)}'),
+                leading: const Icon(Icons.monetization_on_outlined,
+                    color: Colors.pink, size: 24.0),
+                onTap: () {
+                  Navigator.restorablePushNamed(
+                      context, PeriodDetailsView.routeName,
+                      arguments: {'id': period.id});
+                });
+          },
+        ),
       ),
       floatingActionButton: buttonRow,
     );
