@@ -28,3 +28,17 @@ the `lib/src/localization` directory.
 To support additional languages, please visit the tutorial on
 [Internationalizing Flutter
 apps](https://flutter.dev/docs/development/accessibility-and-localization/internationalization)
+
+## System dependencies
+
+Linux:
+
+* libsecret-1-dev
+* libjsoncpp-dev
+
+However, for Linux, it doesn't work if Flutter was installed using Snap. It only works with manual installation.
+
+```
+sudo apt-get install libsecret-1-dev
+sudo apt-get install libjsoncpp-dev
+```

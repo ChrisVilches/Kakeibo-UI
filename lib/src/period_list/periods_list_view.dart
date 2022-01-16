@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo_ui/src/models/period.dart';
 import '../decoration/loading_icon_widget.dart';
 import '../services/graphql_services.dart';
 import '../services/locator.dart';
@@ -20,7 +21,7 @@ class PeriodsListView extends StatefulWidget {
 class PeriodListState extends State<PeriodsListView> {
   bool _loading = true;
 
-  List<dynamic> _periods = [];
+  List<Period> _periods = [];
 
   @override
   void didChangeDependencies() {
@@ -33,7 +34,7 @@ class PeriodListState extends State<PeriodsListView> {
       _loading = true;
     });
 
-    Future<List<dynamic>> periodsData =
+    Future<List<Period>> periodsData =
         serviceLocator.get<GraphQLServices>().fetchPeriods();
 
     periodsData.then((result) {
@@ -88,20 +89,20 @@ class PeriodListState extends State<PeriodsListView> {
         // Providing a restorationId allows the ListView to restore the
         // scroll position when a user leaves and returns to the app after it
         // has been killed while running in the background.
-        restorationId: 'PeriodListView',
+        restorationId: 'PeriodsListView',
         itemCount: _periods.length,
         itemBuilder: (BuildContext context, int index) {
           final period = _periods[index];
 
           return ListTile(
-              title: Text('${period['name']}'),
+              title: Text('${period.name}'),
+              subtitle: Text('${period.dateFrom} - ${period.dateTo}'),
               leading: const Icon(Icons.monetization_on_outlined,
                   color: Colors.pink, size: 24.0),
               onTap: () {
                 Navigator.restorablePushNamed(
-                  context,
-                  PeriodDetailsView.routeName,
-                );
+                    context, PeriodDetailsView.routeName,
+                    arguments: {'id': period.id});
               });
         },
       ),

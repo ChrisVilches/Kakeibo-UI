@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakeibo_ui/src/services/graphql_services.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
+import 'package:kakeibo_ui/src/services/user_service.dart';
 
 import 'src/app.dart';
 import 'src/settings/settings_controller.dart';
@@ -16,6 +17,11 @@ void main() async {
   }
 
   setUpLocator();
+
+  // Login.
+  // TODO: Move somewhere else.
+  await UserService().login("felovilches@gmail.com", "asdasdasd1");
+
   await serviceLocator<GraphQLServices>().initialize();
 
   // Set up the SettingsController, which will glue user settings to multiple

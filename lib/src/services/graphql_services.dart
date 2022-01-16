@@ -1,14 +1,21 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:intl/intl.dart';
+import 'package:kakeibo_ui/src/decoration/date_util.dart';
+import 'package:kakeibo_ui/src/models/period.dart';
+import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:path/path.dart' as path;
 
 class GraphQLServices {
   final _endpoint = path.join(dotenv.env['API_URL']!, 'graphql');
 
-  final _token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNjQyMjk5NDUwLCJleHAiOjE2NDIzMDMwNTAsImp0aSI6ImE3NDAzMTQ4LTRmODUtNDdkZC05YTg0LTIwNzAxM2RhMDdjMCJ9.6aYzWPVkKNY82Gr37-CX_-xOcja3R3OGgfIAXioRRSs';
+  Future<String> _getJwtToken() async {
+    String token = (await serviceLocator
+        .get<FlutterSecureStorage>()
+        .read(key: 'jwtToken'))!;
+
+    return token;
+  }
 
   GraphQLClient? _client;
 
@@ -18,7 +25,7 @@ class GraphQLServices {
     final HttpLink httpLink = HttpLink(_endpoint);
 
     final AuthLink authLink = AuthLink(
-      getToken: () => 'Bearer $_token',
+      getToken: _getJwtToken,
     );
 
     final Link link = authLink.concat(httpLink);
@@ -33,6 +40,8 @@ class GraphQLServices {
     fetchPeriods {
       id
       name
+      dateFrom
+      dateTo
     }
   }
   """;
@@ -46,9 +55,29 @@ class GraphQLServices {
     }
   """;
 
+  final _fetchOnePeriodQuery = """
+    query FetchOnePeriod(\$id: ID!) {
+    fetchOnePeriod(id: \$id) {
+      id
+      name
+      dateFrom
+      dateTo
+      salary
+      initialMoney
+      dailyExpenses
+      savingsPercentage
+      days {
+        id
+        memo
+        dayDate
+        budget
+      }
+    }
+  }
+  """;
+
   // TODO: A bit too verbose
-  // TODO: List<dynamic> is kinda ugly
-  Future<List<dynamic>> fetchPeriods() async {
+  Future<List<Period>> fetchPeriods() async {
     final QueryOptions opt = QueryOptions(document: gql(_fetchPeriodsQuery));
     final QueryResult result = await _client!.query(opt);
 
@@ -56,20 +85,30 @@ class GraphQLServices {
       return Future.error('Error happened');
     } else {
       // TODO: is this last 'fetchPeriods' necessary?
-      return result.data!['fetchPeriods'];
+      return Period.fromJsonList(result.data!['fetchPeriods']);
     }
   }
 
-  String _formatDate(DateTime dt) {
-    return DateFormat('yyyy-MM-dd').format(dt);
+  Future<Period> fetchOnePeriod(int id) async {
+    final QueryOptions opt = QueryOptions(
+        document: gql(_fetchOnePeriodQuery), variables: {'id': id});
+    final QueryResult result = await _client!.query(opt);
+
+    if (result.data == null) {
+      return Future.error('Error happened');
+    } else {
+      // TODO: is this last 'fetchPeriods' necessary?
+      return Period.fromJson(result.data!['fetchOnePeriod']);
+    }
   }
 
+  // TODO: Return "Period" instance.
   Future<QueryResult> createPeriod(
       String name, DateTime dateFrom, DateTime dateTo) async {
     var vars = {
       'name': name,
-      'dateFrom': _formatDate(dateFrom),
-      'dateTo': _formatDate(dateTo)
+      'dateFrom': DateUtil.formatDate(dateFrom),
+      'dateTo': DateUtil.formatDate(dateTo)
     };
 
     final QueryOptions opt = QueryOptions(
