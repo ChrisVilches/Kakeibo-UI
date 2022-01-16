@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/decoration/form_validators.dart';
-import 'package:kakeibo_ui/src/decoration/format_util.dart';
 import 'package:kakeibo_ui/src/decoration/helpers.dart';
+import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/expense.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
@@ -39,17 +39,27 @@ class ExpensesManagementState extends State<ExpensesManagementWidget> {
     _expenses = widget.day.expenses;
   }
 
+  // TODO: Deletion doesn't work properly. Sometimes I get the "dismissed element is part of tree"
+  //       But anyway, I have to modify a lot of things, not just that (e.g. update all views when a change happens,
+  //       without having to restart the app).
   Widget listItem(BuildContext context, int index) {
     Expense expense = _expenses[index];
-    return ExpenseListItemWidget(
-        expense, () => {_expenses.removeWhere((e) => e.id == expense.id)});
+    return ExpenseListItemWidget(expense,
+        removeCallback: () =>
+            {_expenses.removeWhere((e) => e.id == expense.id)},
+        readdCallback: () => {
+              _executeCreateExpense(
+                  expense.label ?? '', expense.cost, "Added again")
+            });
   }
 
-  void _executeCreateExpense() async {
-    Day updatedDay = await serviceLocator.get<GraphQLServices>().createExpense(
-        widget.period, widget.day, _selectedLabel, _selectedCost);
+  void _executeCreateExpense(
+      String label, int cost, String successMessage) async {
+    Day updatedDay = await serviceLocator
+        .get<GraphQLServices>()
+        .createExpense(widget.period, widget.day, label, cost);
 
-    Helpers.simpleSnackbar(context, "Created");
+    Helpers.simpleSnackbar(context, successMessage);
 
     setState(() {
       _expenses = updatedDay.expenses;
@@ -59,13 +69,14 @@ class ExpensesManagementState extends State<ExpensesManagementWidget> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      _executeCreateExpense();
+      _executeCreateExpense(_selectedLabel, _selectedCost, "Created");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     Widget expenseList = ListView.builder(
+      shrinkWrap: true,
       restorationId: 'ExpensesManagementWidget_ExpenseList',
       itemCount: _expenses.length,
       itemBuilder: listItem,
@@ -88,27 +99,35 @@ class ExpensesManagementState extends State<ExpensesManagementWidget> {
         validator: FormValidators.amountValidator,
         decoration: const InputDecoration(labelText: 'Cost'));
 
-    Widget submitButton = ElevatedButton(
+    Widget submitButton = ElevatedButton.icon(
       onPressed: _submitForm,
-      child: const Text('Add expense'),
+      icon: const Icon(Icons.add),
+      label: const Text('Add expense'),
     );
 
     final form = Form(
       key: _formKey,
       child: ExtraPadding(
         child: Column(
-          children: [labelInput, costInput, submitButton],
+          children: [
+            PaddingBottom(
+              child: Column(
+                children: [labelInput, costInput],
+              ),
+            ),
+            submitButton
+          ],
         ),
       ),
     );
 
     final column = Column(
       children: [
-        Expanded(child: expenseList),
-        Expanded(child: form),
+        form,
+        expenseList,
       ],
     );
 
-    return Container(child: column);
+    return column;
   }
 }

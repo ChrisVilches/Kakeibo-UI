@@ -8,6 +8,8 @@ import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:path/path.dart' as path;
 
+// TODO: Forgetting about "fetchPolicy: FetchPolicy.noCache" will return cached results. How can I make it so that it's easier to not forget?
+
 class GraphQLServices {
   final _endpoint = path.join(dotenv.env['API_URL']!, 'graphql');
 
@@ -120,7 +122,8 @@ class GraphQLServices {
 
   // TODO: A bit too verbose
   Future<List<Period>> fetchPeriods() async {
-    final QueryOptions opt = QueryOptions(document: gql(_fetchPeriodsQuery));
+    final QueryOptions opt = QueryOptions(
+        document: gql(_fetchPeriodsQuery), fetchPolicy: FetchPolicy.noCache);
     final QueryResult result = await _client!.query(opt);
 
     if (result.data == null) {

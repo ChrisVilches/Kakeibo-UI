@@ -11,7 +11,7 @@ class RemainingBudgetWidget extends StatelessWidget {
     if (value == null) return const Text('');
     return Text(
       FormatUtil.formatNumberCurrency(value),
-      style: const TextStyle(color: Colors.blue),
+      style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
     );
   }
 }

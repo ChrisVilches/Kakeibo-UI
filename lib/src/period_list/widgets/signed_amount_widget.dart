@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/format_util.dart';
 
-class DiffWidget extends StatelessWidget {
+class SignedAmountWidget extends StatelessWidget {
   final int? value;
 
-  const DiffWidget(this.value, {Key? key}) : super(key: key);
+  const SignedAmountWidget(this.value, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class DiffWidget extends StatelessWidget {
 
     return Text(
       "$sign${FormatUtil.formatNumberCurrency(value!.abs())}",
-      style: TextStyle(color: color),
+      style: TextStyle(color: color, fontWeight: FontWeight.bold),
     );
   }
 }

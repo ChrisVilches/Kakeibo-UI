@@ -11,7 +11,7 @@ class ProjectionWidget extends StatelessWidget {
     if (value == null) return const Text('');
     return Text(
       FormatUtil.formatNumberCurrency(value),
-      style: const TextStyle(color: Colors.green),
+      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
     );
   }
 }

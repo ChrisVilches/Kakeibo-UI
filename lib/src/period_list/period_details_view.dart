@@ -7,6 +7,9 @@ import 'package:kakeibo_ui/src/period_list/widgets/period_chart_widget.dart';
 import 'package:kakeibo_ui/src/services/graphql_services.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 
+// TODO: Not sure about all the nesting, but it's OK probably, since Dart has "required" keyword,
+//       which makes it easier not to forget a callback or something like that.
+
 // TODO: Move some calculations to a different file.
 class PeriodDetailsView extends StatefulWidget {
   static const routeName = '/period_detail';
@@ -33,6 +36,10 @@ class PeriodDetailState extends State<PeriodDetailsView> {
   }
 
   void _setChartData() {
+    _burndownValues.clear();
+    _remainingValues.clear();
+    _projectedValues.clear();
+
     for (int i = 0; i < _period.fullDays.length; i++) {
       _burndownValues.add(burndownBudget(i));
 
@@ -82,6 +89,9 @@ class PeriodDetailState extends State<PeriodDetailsView> {
     return budget - _period.limit();
   }
 
+  // TODO: This is wrong. The correct way to do it is by:
+  // If the user has filled a day (budget), then start from there predicting the next days.
+  // Remove the projection (from the UI, charts, etc) if the budget has been filled (no need to predict).
   int projection(int index) {
     return _period.useable() - (index * _period.useablePerDay());
   }
@@ -90,13 +100,16 @@ class PeriodDetailState extends State<PeriodDetailsView> {
     final day = _period.fullDays[index];
 
     return DayListItemWidget(
-      period: _period,
-      day: day,
-      burndown: burndownBudget(index),
-      projection: projection(index),
-      remaining: remainingUseable(day.budget),
-      diff: diffValue(index),
-    );
+        period: _period,
+        day: day,
+        burndown: burndownBudget(index),
+        projection: projection(index),
+        remaining: remainingUseable(day.budget),
+        diff: diffValue(index),
+        dayDetailModalClosedCallback: () {
+          debugPrint("Refreshing period detail...");
+          _setPeriodDetail();
+        });
   }
 
   @override
@@ -128,16 +141,18 @@ class PeriodDetailState extends State<PeriodDetailsView> {
             icon: const Icon(Icons.bar_chart),
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) {
-                        return PeriodChartWidget(
-                          burndown: _burndownValues,
-                          projected: _projectedValues,
-                          remaining: _remainingValues,
-                        );
-                      },
-                      fullscreenDialog: true));
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return PeriodChartWidget(
+                      burndown: _burndownValues,
+                      projected: _projectedValues,
+                      remaining: _remainingValues,
+                    );
+                  },
+                  fullscreenDialog: true,
+                ),
+              );
             },
           ),
         ],

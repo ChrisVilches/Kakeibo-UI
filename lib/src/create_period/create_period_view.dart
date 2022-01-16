@@ -35,7 +35,7 @@ class CreatePeriodState extends State<CreatePeriodView> {
       content: Text('Created'),
     ));
 
-    Navigator.pop(context);
+    Navigator.of(context).pop(true);
   }
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
@@ -53,7 +53,8 @@ class CreatePeriodState extends State<CreatePeriodView> {
 
   @override
   Widget build(BuildContext context) {
-    Widget dateRangePicker = Positioned(
+    // TODO: "Expanded" fixes the "incorrect parent, etc" error, but looks too big.
+    Widget dateRangePicker = Expanded(
         child: SfDateRangePicker(
             onSelectionChanged: _onSelectionChanged,
             selectionMode: DateRangePickerSelectionMode.extendableRange,
@@ -75,24 +76,31 @@ class CreatePeriodState extends State<CreatePeriodView> {
         },
         decoration: const InputDecoration(labelText: 'Period name'));
 
-    Widget submitButton = ElevatedButton(
+    Widget submitButton = ElevatedButton.icon(
       onPressed: _loading ? null : _submitForm,
-      child: const Text('Create'),
+      icon: const Icon(Icons.add),
+      label: const Text("Create"),
     );
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Create a period'),
+      appBar: AppBar(
+        title: const Text('Create a period'),
+      ),
+      body: Center(
+        child: Form(
+          key: _formKey,
+          child: ExtraPadding(
+            child: Column(
+              children: [
+                nameInput,
+                dateRangePicker,
+                submitButton,
+                _loading ? const LoadingIcon() : Container()
+              ],
+            ),
+          ),
         ),
-        body: Center(
-            child: Form(
-                key: _formKey,
-                child: ExtraPadding(
-                    child: Column(children: [
-                  nameInput,
-                  dateRangePicker,
-                  submitButton,
-                  _loading ? LoadingIcon() : Container()
-                ])))));
+      ),
+    );
   }
 }

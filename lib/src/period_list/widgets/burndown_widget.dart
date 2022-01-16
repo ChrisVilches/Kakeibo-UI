@@ -10,7 +10,7 @@ class BurndownWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       FormatUtil.formatNumberCurrency(value),
-      style: const TextStyle(color: Colors.grey),
+      style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
     );
   }
 }

@@ -4,33 +4,40 @@ import 'package:kakeibo_ui/src/decoration/format_util.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/period_list/widgets/day_detail_widget.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/diff_widget.dart';
+import 'package:kakeibo_ui/src/period_list/widgets/signed_amount_widget.dart';
 import 'package:kakeibo_ui/src/period_list/widgets/remaining_budget_widget.dart';
 
 class DayListItemWidget extends StatelessWidget {
-  Day day;
-  Period period;
-  int burndown;
-  int? diff;
-  int? remaining;
-  int projection;
+  final Day day;
+  final Period period;
+  final int burndown;
+  final int? diff;
+  final int? remaining;
+  final int projection;
+  final Function dayDetailModalClosedCallback;
 
-  DayListItemWidget(
-      {required this.day,
+  const DayListItemWidget(
+      {Key? key,
+      required this.day,
       required this.period,
       required this.burndown,
       this.diff,
       this.remaining,
-      required this.projection});
+      required this.dayDetailModalClosedCallback,
+      required this.projection})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var icon = Icon(Icons.check_rounded,
+        color: day.budget == null ? Colors.grey : Colors.green, size: 20.0);
+
     Widget card = Card(
       child: Row(
         children: <Widget>[
           Container(
             margin: const EdgeInsets.all(20),
-            child: const Icon(Icons.view_day, color: Colors.pink, size: 24.0),
+            child: icon,
           ),
           Align(
             alignment: Alignment.centerLeft,
@@ -41,9 +48,7 @@ class DayListItemWidget extends StatelessWidget {
           ),
           Text(FormatUtil.formatNumberCurrency(day.budget)),
           RemainingBudgetWidget(remaining),
-          // ProjectionWidget(projection(index)),
-          DiffWidget(diff),
-          // BurndownWidget(burndownBudget(index)),
+          SignedAmountWidget(diff),
           Text(
               "Expense: ${FormatUtil.formatNumberCurrency(day.totalExpense())}")
         ],
@@ -51,8 +56,8 @@ class DayListItemWidget extends StatelessWidget {
     );
 
     return InkWell(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (BuildContext context) {
@@ -68,6 +73,8 @@ class DayListItemWidget extends StatelessWidget {
             fullscreenDialog: true,
           ),
         );
+
+        dayDetailModalClosedCallback();
       },
       child: card,
     );

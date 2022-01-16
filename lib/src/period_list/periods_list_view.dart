@@ -27,13 +27,15 @@ class PeriodListState extends State<PeriodsListView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    setPeriodList();
+    _loadPeriodList();
   }
 
-  void setPeriodList() {
+  void _loadPeriodList() {
     setState(() {
       _loading = true;
     });
+
+    debugPrint("Loading period list...");
 
     Future<List<Period>> periodsData =
         serviceLocator.get<GraphQLServices>().fetchPeriods();
@@ -63,11 +65,16 @@ class PeriodListState extends State<PeriodsListView> {
         Padding(
             padding: const EdgeInsets.only(right: 10.0),
             child: FloatingActionButton(
-              onPressed: () {
-                Navigator.restorablePushNamed(
-                  context,
-                  CreatePeriodView.routeName,
-                );
+              onPressed: () async {
+                bool shouldRefresh = (await Navigator.pushNamed(
+                      context,
+                      CreatePeriodView.routeName,
+                    ) as bool?) ??
+                    false;
+
+                if (shouldRefresh) {
+                  _loadPeriodList();
+                }
               },
               tooltip: 'Increment',
               child: const Icon(Icons.add),
@@ -94,9 +101,6 @@ class PeriodListState extends State<PeriodsListView> {
       body: RefreshIndicator(
         onRefresh: _pullRefresh,
         child: ListView.builder(
-          // Providing a restorationId allows the ListView to restore the
-          // scroll position when a user leaves and returns to the app after it
-          // has been killed while running in the background.
           restorationId: 'PeriodsListView',
           itemCount: _periods.length,
           itemBuilder: (BuildContext context, int index) {
