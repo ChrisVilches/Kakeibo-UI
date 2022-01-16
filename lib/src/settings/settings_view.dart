@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'settings_controller.dart';
-import '../decoration/extra_padding.dart';
+import '../decoration/extra_padding_widget.dart';
 
 /// Displays the various settings that can be customized by the user.
 ///
