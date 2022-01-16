@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'settings_controller.dart';
+import '../decoration/extra_padding.dart';
 
 /// Displays the various settings that can be customized by the user.
 ///
@@ -19,8 +20,7 @@ class SettingsView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Settings'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: ExtraPadding(
         // Glue the SettingsController to the theme selection DropdownButton.
         //
         // When a user selects a theme from the dropdown list, the

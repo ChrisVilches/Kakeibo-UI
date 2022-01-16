@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'create_period/create_period_widget.dart';
-import 'period_list/period_list_widget.dart';
-import 'period_list/sample_item_details_view.dart';
+import 'create_period/create_period_view.dart';
+import 'period_list/periods_list_view.dart';
+import 'period_list/period_details_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -70,13 +70,13 @@ class MyApp extends StatelessWidget {
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
-                  case SampleItemDetailsView.routeName:
-                    return const SampleItemDetailsView();
-                  case CreatePeriodWidget.routeName:
-                    return const CreatePeriodWidget();
-                  case PeriodListWidget.routeName:
+                  case PeriodDetailsView.routeName:
+                    return const PeriodDetailsView();
+                  case CreatePeriodView.routeName:
+                    return const CreatePeriodView();
+                  case PeriodsListView.routeName:
                   default:
-                    return const PeriodListWidget();
+                    return const PeriodsListView();
                 }
               },
             );

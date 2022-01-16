@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/services/graphql_client.dart';
-import 'package:kakeibo_ui/src/services/locator.dart';
-
-import '../create_period/create_period_widget.dart';
+import '../decoration/loading_icon_widget.dart';
+import '../services/graphql_services.dart';
+import '../services/locator.dart';
+import '../create_period/create_period_view.dart';
 import '../settings/settings_view.dart';
-import 'sample_item_details_view.dart';
+import 'period_details_view.dart';
 
-class PeriodListWidget extends StatefulWidget {
+class PeriodsListView extends StatefulWidget {
   static const routeName = '/';
-  const PeriodListWidget({Key? key}) : super(key: key);
+  const PeriodsListView({Key? key}) : super(key: key);
 
   @override
   PeriodListState createState() => PeriodListState();
@@ -17,7 +17,7 @@ class PeriodListWidget extends StatefulWidget {
 // TODO: Is this class naming (state and widget) correct?
 //       it probably is, considering that State extends State<> and
 //       widget extends StatefulWidget
-class PeriodListState extends State<PeriodListWidget> {
+class PeriodListState extends State<PeriodsListView> {
   bool _loading = true;
 
   List<dynamic> _periods = [];
@@ -47,8 +47,7 @@ class PeriodListState extends State<PeriodListWidget> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      // TODO: This is dumb
-      return const Text("Loading...");
+      return const Center(child: LoadingIcon());
     }
 
     Widget buttonRow = Row(
@@ -60,20 +59,16 @@ class PeriodListState extends State<PeriodListWidget> {
               onPressed: () {
                 Navigator.restorablePushNamed(
                   context,
-                  CreatePeriodWidget.routeName,
+                  CreatePeriodView.routeName,
                 );
               },
               tooltip: 'Increment',
               child: const Icon(Icons.add),
-            )),
-        FloatingActionButton(
-          onPressed: () {},
-          tooltip: 'Alarm',
-          child: const Icon(Icons.access_alarms),
-        ),
+            ))
       ],
     );
 
+    // TODO: In the list, show both dates, that way it'd be easier.
     return Scaffold(
       appBar: AppBar(
         title: const Text('Kakeibo'),
@@ -105,7 +100,7 @@ class PeriodListState extends State<PeriodListWidget> {
               onTap: () {
                 Navigator.restorablePushNamed(
                   context,
-                  SampleItemDetailsView.routeName,
+                  PeriodDetailsView.routeName,
                 );
               });
         },

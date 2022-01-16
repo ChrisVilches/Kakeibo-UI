@@ -1,33 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/services/graphql_client.dart';
-import 'package:kakeibo_ui/src/services/locator.dart';
+import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import '../decoration/extra_padding_widget.dart';
+import '../services/graphql_services.dart';
+import '../services/locator.dart';
 
-Widget loadingIcon = const SpinKitFadingCircle(
-  color: Colors.white,
-  size: 50.0,
-);
+// TODO: Also divide in service + controllers? (like the settings view)
 
-class CreatePeriodWidget extends StatefulWidget {
+class CreatePeriodView extends StatefulWidget {
   static const routeName = '/create_period';
-  const CreatePeriodWidget({Key? key}) : super(key: key);
+  const CreatePeriodView({Key? key}) : super(key: key);
 
   @override
   CreatePeriodState createState() => CreatePeriodState();
 }
 
-class CreatePeriodState extends State<CreatePeriodWidget> {
+class CreatePeriodState extends State<CreatePeriodView> {
   final _formKey = GlobalKey<FormState>();
   bool _loading = false;
   String _selectedName = "";
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now().add(const Duration(days: 7));
-
-  // TODO: Use it so that the name is created automatically.
-  String _defaultName() {
-    return "$_selectedStartDate - $_selectedEndDate";
-  }
 
   void _executeCreatePeriod() async {
     setState(() {
@@ -55,9 +48,6 @@ class CreatePeriodState extends State<CreatePeriodWidget> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       _executeCreatePeriod();
-      //ScaffoldMessenger.of(context).showSnackBar(
-      //  const SnackBar(content: Text('Creating...')),
-      //);
     }
   }
 
@@ -97,11 +87,12 @@ class CreatePeriodState extends State<CreatePeriodWidget> {
         body: Center(
             child: Form(
                 key: _formKey,
-                child: Column(children: [
+                child: ExtraPadding(
+                    child: Column(children: [
                   nameInput,
                   dateRangePicker,
                   submitButton,
-                  _loading ? loadingIcon : Text('')
-                ]))));
+                  _loading ? LoadingIcon() : Container()
+                ])))));
   }
 }

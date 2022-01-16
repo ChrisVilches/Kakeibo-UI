@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart' as path;
 
-// TODO: Class and file name are different
 class GraphQLServices {
-  final String _endpoint = 'http://localhost:3000/graphql';
-  final String _token =
-      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNjQyMjk0NTE4LCJleHAiOjE2NDIyOTgxMTgsImp0aSI6IjVjYzA1MGRkLTVjY2UtNDRhYS1hOWYzLTFlYTFkMzUzYjdmZSJ9.uATo9rdsLhTJ1UcULZL-kGozi7rZvrJAu6QwxLAmtWU';
+  final _endpoint = path.join(dotenv.env['API_URL']!, 'graphql');
+
+  final _token =
+      'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNjQyMjk5NDUwLCJleHAiOjE2NDIzMDMwNTAsImp0aSI6ImE3NDAzMTQ4LTRmODUtNDdkZC05YTg0LTIwNzAxM2RhMDdjMCJ9.6aYzWPVkKNY82Gr37-CX_-xOcja3R3OGgfIAXioRRSs';
 
   GraphQLClient? _client;
 
@@ -26,32 +28,28 @@ class GraphQLServices {
 
   // TODO: Put queries in a different file. They are mixed with the client creation boilerplate.
 
-  String _fetchPeriodsQuery() {
-    return """
-      query {
-        fetchPeriods {
-          id
-          name
-        }
-      }
-    """;
+  final _fetchPeriodsQuery = """
+  query {
+    fetchPeriods {
+      id
+      name
+    }
   }
+  """;
 
-  String _createPeriodQuery() {
-    return """
-      mutation CreatePeriod(\$input: PeriodsCreateInput!) {
-        createPeriod(input: \$input) {
-          id
-          name
-        }
+  final _createPeriodQuery = """
+    mutation CreatePeriod(\$input: PeriodsCreateInput!) {
+      createPeriod(input: \$input) {
+        id
+        name
       }
-    """;
-  }
+    }
+  """;
 
   // TODO: A bit too verbose
   // TODO: List<dynamic> is kinda ugly
   Future<List<dynamic>> fetchPeriods() async {
-    final QueryOptions opt = QueryOptions(document: gql(_fetchPeriodsQuery()));
+    final QueryOptions opt = QueryOptions(document: gql(_fetchPeriodsQuery));
     final QueryResult result = await _client!.query(opt);
 
     if (result.data == null) {
@@ -75,7 +73,7 @@ class GraphQLServices {
     };
 
     final QueryOptions opt = QueryOptions(
-        document: gql(_createPeriodQuery()), variables: {'input': vars});
+        document: gql(_createPeriodQuery), variables: {'input': vars});
 
     return await _client!.query(opt);
   }
