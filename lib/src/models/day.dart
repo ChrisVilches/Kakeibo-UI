@@ -36,7 +36,6 @@ class Day {
     );
   }
 
-  // TODO: This code and the factory can be recycled.
   static List<Day> fromJsonList(jsonList) {
     if (jsonList == null) return [];
     return jsonList.map<Day>((json) => Day.fromJson(json)).toList();

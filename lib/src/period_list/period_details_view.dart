@@ -4,6 +4,7 @@ import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/period_list/widgets/day_list_item_widget.dart';
 import 'package:kakeibo_ui/src/period_list/widgets/period_chart_widget.dart';
+import 'package:kakeibo_ui/src/period_list/widgets/period_config_widget.dart';
 import 'package:kakeibo_ui/src/services/graphql_services.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 
@@ -33,6 +34,70 @@ class PeriodDetailState extends State<PeriodDetailsView> {
   void didChangeDependencies() async {
     super.didChangeDependencies();
     await _setPeriodDetail();
+
+    if (_shouldShowReminderConfig()) {
+      _showReminderConfig();
+    }
+  }
+
+  void _openConfigWidgetModal() async {
+    bool shouldRefresh = (await Navigator.push<bool?>(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return PeriodConfigWidget(period: _period);
+            },
+            fullscreenDialog: true,
+          ),
+        ) ??
+        false);
+
+    if (shouldRefresh) {
+      debugPrint(
+          "Refreshing period detail (because submitted the form in config widget)...");
+      _setPeriodDetail();
+    }
+  }
+
+  void _showReminderConfig() {
+    Widget okButton = TextButton(
+      child: const Text("Configure"),
+      onPressed: () {
+        // Remove alert first.
+        Navigator.of(context).pop();
+        _openConfigWidgetModal();
+      },
+    );
+
+    Widget cancelButton = TextButton(
+      child: const Text("Cancel"),
+      style:
+          ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.grey)),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("Please configure this period correctly"),
+      content: const Text(
+          "It seems this period is missing some configurations. Configure now?"),
+      actions: [cancelButton, okButton],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  bool _shouldShowReminderConfig() {
+    return _period.salary! == 0 ||
+        _period.savingsPercentage! == 0 ||
+        _period.initialMoney! == 0 ||
+        _period.dailyExpenses! == 0;
   }
 
   void _setChartData() {
@@ -137,6 +202,10 @@ class PeriodDetailState extends State<PeriodDetailsView> {
       appBar: AppBar(
         title: Text(_periodDetailTitle()),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: _openConfigWidgetModal,
+          ),
           IconButton(
             icon: const Icon(Icons.bar_chart),
             onPressed: () {

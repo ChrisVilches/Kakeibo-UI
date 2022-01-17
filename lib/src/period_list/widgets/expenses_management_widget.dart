@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/decoration/form_validators.dart';
 import 'package:kakeibo_ui/src/decoration/helpers.dart';
@@ -96,6 +97,9 @@ class ExpensesManagementState extends State<ExpensesManagementWidget> {
                 _selectedCost = int.parse(text);
               })
             },
+        keyboardType: TextInputType.number,
+        // TODO: Use my custom "DigitsOnlyInputWidget" widget?
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         validator: FormValidators.amountValidator,
         decoration: const InputDecoration(labelText: 'Cost'));
 

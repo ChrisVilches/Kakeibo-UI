@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
+import 'package:kakeibo_ui/src/enums/currency_symbol.dart';
 import 'settings_controller.dart';
-import '../decoration/extra_padding_widget.dart';
 
 /// Displays the various settings that can be customized by the user.
 ///
@@ -16,6 +16,46 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget themeDropdown = DropdownButton<ThemeMode>(
+      // Read the selected themeMode from the controller
+      value: controller.themeMode,
+      // Call the updateThemeMode method any time the user selects a theme.
+      onChanged: controller.updateThemeMode,
+      items: const [
+        DropdownMenuItem(
+          value: ThemeMode.system,
+          child: Text('System Theme'),
+        ),
+        DropdownMenuItem(
+          value: ThemeMode.light,
+          child: Text('Light Theme'),
+        ),
+        DropdownMenuItem(
+          value: ThemeMode.dark,
+          child: Text('Dark Theme'),
+        )
+      ],
+    );
+
+    Widget currencySymbolDropdown = DropdownButton<CurrencySymbol>(
+      value: controller.currencySymbol,
+      onChanged: controller.updateCurrencySymbol,
+      items: const [
+        DropdownMenuItem(
+          value: CurrencySymbol.dollar,
+          child: Text('\$'),
+        ),
+        DropdownMenuItem(
+          value: CurrencySymbol.euro,
+          child: Text('€'),
+        ),
+        DropdownMenuItem(
+          value: CurrencySymbol.yen,
+          child: Text('¥'),
+        )
+      ],
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -25,25 +65,9 @@ class SettingsView extends StatelessWidget {
         //
         // When a user selects a theme from the dropdown list, the
         // SettingsController is updated, which rebuilds the MaterialApp.
-        child: DropdownButton<ThemeMode>(
-          // Read the selected themeMode from the controller
-          value: controller.themeMode,
-          // Call the updateThemeMode method any time the user selects a theme.
-          onChanged: controller.updateThemeMode,
-          items: const [
-            DropdownMenuItem(
-              value: ThemeMode.system,
-              child: Text('System Theme'),
-            ),
-            DropdownMenuItem(
-              value: ThemeMode.light,
-              child: Text('Light Theme'),
-            ),
-            DropdownMenuItem(
-              value: ThemeMode.dark,
-              child: Text('Dark Theme'),
-            )
-          ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [themeDropdown, currencySymbolDropdown],
         ),
       ),
     );

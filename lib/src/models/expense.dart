@@ -9,7 +9,7 @@ class Expense {
     return Expense(
       id: int.parse(json['id']),
       cost: int.parse(
-          json['cost']), // TODO: Should come as an int from the server.
+          json['cost']), // BigInt (rendered as string from the backend)
       label: json['label'],
     );
   }

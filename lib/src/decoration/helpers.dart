@@ -9,7 +9,7 @@ class Helpers {
     ));
   }
 
-  /// Closes all snackbars and creates a new one.
+  /// Closes all snackbars and creates a new one with a button.
   static void snackbarWithAction(
       BuildContext context, String msg, String actionLabel, Function callback) {
     ScaffoldMessenger.of(context).clearSnackBars();

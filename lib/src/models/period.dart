@@ -6,7 +6,7 @@ class Period {
   final int? id;
   final String? name;
   final List<Day> days;
-  List<Day> fullDays;
+  late List<Day> fullDays;
   final DateTime? dateFrom;
   final DateTime? dateTo;
   final int? initialMoney;
@@ -42,10 +42,6 @@ class Period {
   }
 
   List<Day> _getFullDays() {
-    // TODO: Sort doesn't work. But for now it's ok because the backend renders the days in order.
-
-    // days.sort((d1, d2) => d1.dayDate!.compareTo(d2.dayDate!));
-
     if (dateFrom == null || dateTo == null) return [];
 
     DateTime date = dateFrom!;
@@ -56,8 +52,7 @@ class Period {
 
     while (date.compareTo(dateTo!) <= 0) {
       if (i < days.length && days[i].dayDate == date) {
-        result.add(days[i]);
-        i++;
+        result.add(days[i++]);
       } else {
         result.add(Day(dayDate: date));
       }
@@ -68,11 +63,25 @@ class Period {
     return result;
   }
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'salary': salary,
+        'initialMoney': initialMoney,
+        'dailyExpenses': dailyExpenses,
+        'savingsPercentage': savingsPercentage,
+        'dateFrom': dateFrom == null ? null : DateUtil.formatDate(dateFrom!),
+        'dateTo': dateTo == null ? null : DateUtil.formatDate(dateTo!)
+      };
+
   factory Period.fromJson(Map<String, dynamic> json) {
+    List<Day> days = Day.fromJsonList(json['days']);
+    days.sort((d1, d2) => d1.dayDate.compareTo(d2.dayDate));
+
     return Period(
         id: int.parse(json['id']),
         name: json['name'].toString(),
-        days: Day.fromJsonList(json['days']),
+        days: days,
         salary: json['salary'],
         initialMoney: json['initialMoney'],
         dailyExpenses: json['dailyExpenses'],

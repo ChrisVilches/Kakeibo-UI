@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
-
-// TODO: In order to understand how this controller/service/view architecture works, I
-//       want to add the following feature: Choose currency symbol ($ ¥ €)
-//       and add it to this Settings view as well.
+import 'package:kakeibo_ui/src/enums/currency_symbol.dart';
 
 class SettingsService {
   Future<ThemeMode> themeMode() async {
@@ -32,5 +29,25 @@ class SettingsService {
     await serviceLocator
         .get<FlutterSecureStorage>()
         .write(key: 'theme', value: themeName);
+  }
+
+  Future<CurrencySymbol> currencySymbol() async {
+    String? symbol = await serviceLocator
+        .get<FlutterSecureStorage>()
+        .read(key: 'currencySymbol');
+
+    for (final CurrencySymbol sym in CurrencySymbol.values) {
+      if (sym.toString() == symbol) {
+        return sym;
+      }
+    }
+
+    return CurrencySymbol.dollar;
+  }
+
+  Future<void> updateCurrencySymbol(CurrencySymbol symbol) async {
+    await serviceLocator
+        .get<FlutterSecureStorage>()
+        .write(key: 'currencySymbol', value: symbol.toString());
   }
 }

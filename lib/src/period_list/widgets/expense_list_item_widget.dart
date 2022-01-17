@@ -25,9 +25,8 @@ class ExpenseListItemWidget extends StatelessWidget {
     );
 
     final listTile = CardWithFloatRightItemWidget(
-      // TODO: Make it possible to change icon color and size?
       icon: const Icon(Icons.arrow_downward),
-      label: title.data ?? '',
+      label: title,
       rightWidget: SignedAmountWidget(-expense.cost),
     );
 

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 
+// TODO: Doesn't look perfect when the screen is small (e.g. text should use the pretty overflow).
 class CardWithFloatRightItemWidget extends StatelessWidget {
   final Icon icon;
-  final String label;
+  final Widget label;
   final Widget rightWidget;
 
   const CardWithFloatRightItemWidget(
@@ -21,7 +22,7 @@ class CardWithFloatRightItemWidget extends StatelessWidget {
           children: <Widget>[
             icon,
             const SizedBox(width: 16),
-            Text(label),
+            label,
             const Spacer(),
             rightWidget,
           ],

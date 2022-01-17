@@ -76,7 +76,7 @@ class PeriodListState extends State<PeriodsListView> {
                   _loadPeriodList();
                 }
               },
-              tooltip: 'Increment',
+              tooltip: 'Create new period',
               child: const Icon(Icons.add),
             ))
       ],
@@ -106,16 +106,28 @@ class PeriodListState extends State<PeriodsListView> {
           itemBuilder: (BuildContext context, int index) {
             final period = _periods[index];
 
+            List<String> dateRange =
+                DateUtil.formatDayRanges(period.dateFrom!, period.dateTo!);
+
             return ListTile(
                 title: Text('${period.name}'),
-                subtitle: Text(
-                    '${DateUtil.formatDate(period.dateFrom!)} - ${DateUtil.formatDate(period.dateTo!)}'),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 5),
+                    Text('${dateRange[0]} ~ ${dateRange[1]}')
+                  ],
+                ),
                 leading: const Icon(Icons.monetization_on_outlined,
                     color: Colors.pink, size: 24.0),
-                onTap: () {
-                  Navigator.restorablePushNamed(
+                onTap: () async {
+                  await Navigator.pushNamed(
                       context, PeriodDetailsView.routeName,
                       arguments: {'id': period.id});
+
+                  // TODO: Probably not very good to reload the period list here. (it's easy to forget, and there are many places)
+                  // A lifecycle event would be a lot better. But how?
+                  _loadPeriodList();
                 });
           },
         ),

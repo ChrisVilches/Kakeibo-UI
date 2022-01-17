@@ -39,6 +39,8 @@ class GraphQLServices {
 
   // TODO: Put queries in a different file. They are mixed with the client creation boilerplate.
 
+  // TODO: The fact that queries require some parameters (but it's never explicit... I have to guess) and not some other ones is also a code smell.
+
   final _fetchPeriodsQuery = """
   query {
     fetchPeriods {
@@ -84,12 +86,34 @@ class GraphQLServices {
     }
   """;
 
+  final _updatePeriodQuery = """
+    mutation UpdatePeriod(\$input: PeriodsUpdateInput!) {
+      updatePeriod(input: \$input) {
+        id
+        name
+        dateTo
+        dateFrom
+      }
+    }
+  """;
+
   final _destroyExpenseQuery = """
     mutation DestroyExpense(\$input: ExpensesDestroyInput!) {
       destroyExpense(input: \$input) {
         id
         cost
         label
+      }
+    }
+  """;
+
+  final _destroyPeriodQuery = """
+    mutation DestroyPeriod(\$input: PeriodsDestroyInput!) {
+      destroyOnePeriod(input: \$input) {
+        id
+        name
+        dateFrom
+        dateTo
       }
     }
   """;
@@ -136,7 +160,9 @@ class GraphQLServices {
 
   Future<Period> fetchOnePeriod(int id) async {
     final QueryOptions opt = QueryOptions(
-        document: gql(_fetchOnePeriodQuery), variables: {'id': id});
+        document: gql(_fetchOnePeriodQuery),
+        variables: {'id': id},
+        fetchPolicy: FetchPolicy.noCache);
     final QueryResult result = await _client!.query(opt);
 
     if (result.data == null) {
@@ -207,6 +233,21 @@ class GraphQLServices {
     }
   }
 
+  Future<Period> updatePeriod(Period period) async {
+    var vars = {'input': period.toJson()};
+
+    final opt =
+        QueryOptions(document: gql(_updatePeriodQuery), variables: vars);
+
+    final result = await _client!.query(opt);
+
+    if (result.data == null) {
+      return Future.error('Error happened');
+    } else {
+      return Period.fromJson(result.data!['updatePeriod']);
+    }
+  }
+
   Future<Expense> destroyExpense(int expenseId) async {
     var vars = {
       'input': {'id': expenseId}
@@ -221,6 +262,22 @@ class GraphQLServices {
       return Future.error('Error happened');
     } else {
       return Expense.fromJson(result.data!['destroyExpense']);
+    }
+  }
+
+  Future<Period> destroyPeriod(int periodId) async {
+    var vars = {
+      'input': {'id': periodId}
+    };
+
+    final opt =
+        QueryOptions(document: gql(_destroyPeriodQuery), variables: vars);
+    final result = await _client!.query(opt);
+
+    if (result.data == null) {
+      return Future.error('Error happened');
+    } else {
+      return Period.fromJson(result.data!['destroyOnePeriod']);
     }
   }
 }
