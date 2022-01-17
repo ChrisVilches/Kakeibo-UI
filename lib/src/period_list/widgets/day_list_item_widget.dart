@@ -15,7 +15,7 @@ class DayListItemWidget extends StatelessWidget {
   final int burndown;
   final int? diff;
   final int? remaining;
-  final int projection;
+  final int? projection;
   final Function dayDetailModalClosedCallback;
 
   const DayListItemWidget(
@@ -25,8 +25,8 @@ class DayListItemWidget extends StatelessWidget {
       required this.burndown,
       this.diff,
       this.remaining,
-      required this.dayDetailModalClosedCallback,
-      required this.projection})
+      this.projection,
+      required this.dayDetailModalClosedCallback})
       : super(key: key);
 
   @override

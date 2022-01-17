@@ -1,14 +1,15 @@
 import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 
+/// Logic for generating the full table (all data necessary for graphs and other views).
 class TableCalculator {
   final Period _period;
 
-  late final List<int?> projections;
-  late final List<int?> remaining;
-  late final List<int> burndown;
-  late final List<int?> diff;
-  late final List<int> dayExpenses;
+  late final List<int?> projections = [];
+  late final List<int?> remaining = [];
+  late final List<int> burndown = [];
+  late final List<int?> diff = [];
+  late final List<int> dayExpenses = [];
 
   TableCalculator(this._period) {
     _setExpenses();
@@ -24,20 +25,31 @@ class TableCalculator {
   }
 
   void _setProjections() {
-    for (int i = 0; i < _period.days.length; i++) {
+    int expenseAccum = 0;
+    int currValue =
+        remaining[0] == null ? _period.initialMoney! : remaining[0]!;
+
+    for (int i = 0; i < _period.fullDays.length; i++) {
       Day day = _period.fullDays[i];
 
+      expenseAccum += dayExpenses[i];
+
+      currValue -= expenseAccum;
+
       if (day.budget == null) {
-        // add projection
+        projections.add(currValue);
       } else {
-        // budget exists, so add null
         projections.add(null);
+        currValue = remaining[i]!;
+        expenseAccum = 0;
       }
+
+      currValue -= _period.dailyExpenses!;
     }
   }
 
   void _setDiff() {
-    for (int i = 0; i < _period.days.length; i++) {
+    for (int i = 0; i < _period.fullDays.length; i++) {
       Day day = _period.fullDays[i];
       if (day.budget == null) {
         diff.add(null);
@@ -66,7 +78,7 @@ class TableCalculator {
   }
 
   void _setBurndown() {
-    for (int i = 0; i < _period.days.length; i++) {
+    for (int i = 0; i < _period.fullDays.length; i++) {
       int value = _period.useable() - ((i + 1) * _period.useablePerDay());
       burndown.add(value);
     }

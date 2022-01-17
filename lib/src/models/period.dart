@@ -29,12 +29,12 @@ class Period {
   }
 
   int useable() {
-    double result = (salary! * (100 - savingsPercentage!)) / 100;
-    return result.floor();
+    double result = (salary! * (100 - savingsPercentage!)) / 100.0;
+    return result.round();
   }
 
   int useablePerDay() {
-    return (useable() / fullDays.length).floor();
+    return (useable() / fullDays.length).round();
   }
 
   int limit() {
