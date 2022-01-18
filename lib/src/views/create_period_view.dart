@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
+import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../decoration/extra_padding_widget.dart';
 import '../services/graphql_services.dart';
@@ -27,9 +28,7 @@ class CreatePeriodState extends State<CreatePeriodView> {
       _loading = true;
     });
 
-    await serviceLocator
-        .get<GraphQLServices>()
-        .createPeriod(_selectedName, _selectedStartDate, _selectedEndDate);
+    await Period.create(_selectedName, _selectedStartDate, _selectedEndDate);
 
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Created'),
@@ -59,8 +58,7 @@ class CreatePeriodState extends State<CreatePeriodView> {
             onSelectionChanged: _onSelectionChanged,
             selectionMode: DateRangePickerSelectionMode.extendableRange,
             view: DateRangePickerView.year,
-            initialSelectedRange:
-                PickerDateRange(_selectedStartDate, _selectedEndDate)));
+            initialSelectedRange: PickerDateRange(_selectedStartDate, _selectedEndDate)));
 
     Widget nameInput = TextFormField(
         onChanged: (text) => {

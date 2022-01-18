@@ -35,7 +35,7 @@ class _PeriodListState extends State<PeriodsListView> {
 
     debugPrint("Loading period list...");
 
-    List<Period> result = await serviceLocator.get<GraphQLServices>().fetchPeriods();
+    List<Period> result = await Period.fetchAll();
 
     setState(() {
       _periods = result;

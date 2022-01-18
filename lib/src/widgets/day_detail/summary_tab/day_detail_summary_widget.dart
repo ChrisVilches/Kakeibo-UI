@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/card_with_float_right_item_widget.dart';
-import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
+import 'package:kakeibo_ui/src/widgets/misc/projection_widget.dart';
+import 'package:kakeibo_ui/src/widgets/misc/remaining_budget_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/projection_widget.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/remaining_budget_widget.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/signed_amount_widget.dart';
-
-import 'burndown_widget.dart';
+import 'package:kakeibo_ui/src/widgets/misc/burndown_widget.dart';
+import 'package:kakeibo_ui/src/widgets/misc/signed_amount_widget.dart';
 
 class DayDetailSummaryWidget extends StatelessWidget {
   final Day day;

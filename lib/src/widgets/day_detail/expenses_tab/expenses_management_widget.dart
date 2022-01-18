@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
-import 'package:kakeibo_ui/src/decoration/helpers.dart';
+import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
-import 'package:kakeibo_ui/src/misc_widgets/digits_only_input_widget.dart';
+import 'package:kakeibo_ui/src/widgets/misc/digits_only_input_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/expense.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/expense_list_item_widget.dart';
-import 'package:kakeibo_ui/src/services/graphql_services.dart';
-import 'package:kakeibo_ui/src/services/locator.dart';
+import 'package:kakeibo_ui/src/widgets/day_detail/expenses_tab/expense_list_item_widget.dart';
 
 class ExpensesManagementWidget extends StatefulWidget {
   final Period period;
@@ -49,11 +47,9 @@ class _ExpensesManagementState extends State<ExpensesManagementWidget> {
   }
 
   void _executeCreateExpense(String label, int cost, String successMessage) async {
-    Day updatedDay = await serviceLocator
-        .get<GraphQLServices>()
-        .createExpense(widget.period, widget.day, label, cost);
+    Day updatedDay = await widget.day.createExpense(widget.period, label, cost);
 
-    Helpers.simpleSnackbar(context, successMessage);
+    SnackbarService.simpleSnackbar(context, successMessage);
 
     setState(() {
       _expenses = updatedDay.expenses;

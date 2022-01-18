@@ -1,5 +1,9 @@
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/models/expense.dart';
+import 'package:kakeibo_ui/src/models/period.dart';
+import 'package:kakeibo_ui/src/services/gql_client.dart';
+import 'package:kakeibo_ui/src/services/locator.dart';
 
 class Day {
   final int? id;
@@ -24,6 +28,31 @@ class Day {
     }
 
     return result;
+  }
+
+  Future<Day> createExpense(Period period, String label, int cost) async {
+    QueryResult result = await serviceLocator.get<GQLClient>().executeQuery("""
+      mutation CreateExpense(\$input: ExpensesCreateInput!) {
+        createExpense(input: \$input) {
+          id
+          dayDate
+          expenses {
+            id
+            label
+            cost
+          }
+        }
+      }
+    """, variables: {
+      'input': {
+        'label': label,
+        'cost': cost,
+        'periodId': period.id!,
+        'dayDate': DateUtil.formatDate(dayDate)
+      }
+    });
+
+    return Day.fromJson(result.data!['createExpense']);
   }
 
   factory Day.fromJson(Map<String, dynamic> json) {

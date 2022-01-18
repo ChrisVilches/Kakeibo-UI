@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/decoration/form_validators.dart';
-import 'package:kakeibo_ui/src/decoration/helpers.dart';
+import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
 import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
-import 'package:kakeibo_ui/src/misc_widgets/digits_only_input_widget.dart';
-import 'package:kakeibo_ui/src/services/graphql_services.dart';
-import 'package:kakeibo_ui/src/services/locator.dart';
+import 'package:kakeibo_ui/src/widgets/misc/digits_only_input_widget.dart';
 
 class PeriodConfigWidget extends StatefulWidget {
   final Period period;
@@ -55,10 +53,9 @@ class PeriodConfigState extends State<PeriodConfigWidget> {
           dateFrom: null,
           dateTo: null);
 
-      Period updatedPeriod =
-          await serviceLocator.get<GraphQLServices>().updatePeriod(periodChanged);
+      Period updatedPeriod = await Period.update(periodChanged);
 
-      Helpers.simpleSnackbar(context, "Updated period information.");
+      SnackbarService.simpleSnackbar(context, "Updated period information.");
       debugPrint("Updated period. New data: $updatedPeriod");
       Navigator.of(context).pop(true);
     }
@@ -75,7 +72,7 @@ class PeriodConfigState extends State<PeriodConfigWidget> {
     setState(() {
       _loading = true;
     });
-    Period period = await serviceLocator.get<GraphQLServices>().fetchOnePeriod(widget.period.id!);
+    Period period = await Period.fetchOne(widget.period.id!);
 
     setState(() {
       _salaryValue = period.salary.toString();
@@ -92,10 +89,9 @@ class PeriodConfigState extends State<PeriodConfigWidget> {
       child: const Text("Delete"),
       style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.red)),
       onPressed: () async {
-        Period deletedPeriod =
-            await serviceLocator.get<GraphQLServices>().destroyPeriod(widget.period.id!);
+        Period deletedPeriod = await widget.period.destroy();
 
-        Helpers.simpleSnackbar(context, "Removed: ${deletedPeriod.name}");
+        SnackbarService.simpleSnackbar(context, "Removed: ${deletedPeriod.name}");
         Navigator.popUntil(context, ModalRoute.withName('/'));
       },
     );

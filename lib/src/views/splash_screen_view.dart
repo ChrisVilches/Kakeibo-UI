@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
-import 'misc_widgets/app_logo_widget.dart';
+import 'package:kakeibo_ui/src/widgets/misc/app_logo_widget.dart';
 
 class SplashScreenView extends StatefulWidget {
   static const routeName = '/splash_screen';

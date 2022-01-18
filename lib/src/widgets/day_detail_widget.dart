@@ -3,9 +3,9 @@ import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/decoration/padding_top_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/day_detail_summary_widget.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/expenses_management_widget.dart';
-import 'day_detail_form_widget.dart';
+import 'package:kakeibo_ui/src/widgets/day_detail/expenses_tab/expenses_management_widget.dart';
+import 'package:kakeibo_ui/src/widgets/day_detail/summary_tab/day_detail_form_widget.dart';
+import 'package:kakeibo_ui/src/widgets/day_detail/summary_tab/day_detail_summary_widget.dart';
 
 class DayDetailWidget extends StatefulWidget {
   final int burndown;

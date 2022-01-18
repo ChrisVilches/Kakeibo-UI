@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/day_list_item_widget.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/period_chart_widget.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/period_config_widget.dart';
-import 'package:kakeibo_ui/src/services/graphql_services.dart';
-import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/services/table_calculator.dart';
+import 'package:kakeibo_ui/src/widgets/day_list_item_widget.dart';
+import 'package:kakeibo_ui/src/widgets/period_chart_widget.dart';
+import 'package:kakeibo_ui/src/widgets/period_config_widget.dart';
 
 // TODO: Not sure about all the nesting, but it's OK probably, since Dart has "required" keyword,
 //       which makes it easier not to forget a callback or something like that.
@@ -49,8 +47,7 @@ class PeriodDetailState extends State<PeriodDetailsView> {
         false);
 
     if (shouldRefresh) {
-      debugPrint(
-          "Refreshing period detail (because submitted the form in config widget)...");
+      debugPrint("Refreshing period detail (because submitted the form in config widget)...");
       _setPeriodDetail();
     }
   }
@@ -67,8 +64,7 @@ class PeriodDetailState extends State<PeriodDetailsView> {
 
     Widget cancelButton = TextButton(
       child: const Text("Cancel"),
-      style:
-          ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.grey)),
+      style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.grey)),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -76,8 +72,7 @@ class PeriodDetailState extends State<PeriodDetailsView> {
 
     AlertDialog alert = AlertDialog(
       title: const Text("Please configure this period correctly"),
-      content: const Text(
-          "It seems this period is missing some configurations. Configure now?"),
+      content: const Text("It seems this period is missing some configurations. Configure now?"),
       actions: [cancelButton, okButton],
     );
 
@@ -90,17 +85,14 @@ class PeriodDetailState extends State<PeriodDetailsView> {
   }
 
   bool _shouldShowReminderConfig() {
-    return _period.salary! == 0 ||
-        _period.initialMoney! == 0 ||
-        _period.dailyExpenses! == 0;
+    return _period.salary! == 0 || _period.initialMoney! == 0 || _period.dailyExpenses! == 0;
   }
 
   Future<void> _setPeriodDetail() async {
     final arguments = ModalRoute.of(context)!.settings.arguments as Map;
     int periodId = arguments['id'];
 
-    final periodResult =
-        await serviceLocator.get<GraphQLServices>().fetchOnePeriod(periodId);
+    final periodResult = await Period.fetchOne(periodId);
 
     setState(() {
       _period = periodResult;

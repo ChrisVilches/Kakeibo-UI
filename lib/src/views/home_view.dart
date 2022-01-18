@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/login_view.dart';
-import 'package:kakeibo_ui/src/period_list/periods_list_view.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/services/user_service.dart';
+import 'package:kakeibo_ui/src/views/login_view.dart';
+import 'package:kakeibo_ui/src/views/periods_list_view.dart';
 
 class HomeView extends StatefulWidget {
   static const routeName = '/';

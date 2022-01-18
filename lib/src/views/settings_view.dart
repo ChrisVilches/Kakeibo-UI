@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo_ui/src/controllers/settings_controller.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/enums/currency_symbol.dart';
-import 'settings_controller.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({Key? key, required this.controller}) : super(key: key);

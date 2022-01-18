@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Helpers {
+class SnackbarService {
   /// Closes all snackbars and creates a new one.
   static void simpleSnackbar(BuildContext context, String msg) {
     ScaffoldMessenger.of(context).clearSnackBars();

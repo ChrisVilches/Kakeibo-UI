@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
-import 'package:kakeibo_ui/src/decoration/helpers.dart';
+import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
-import 'package:kakeibo_ui/src/misc_widgets/digits_only_input_widget.dart';
+import 'package:kakeibo_ui/src/widgets/misc/digits_only_input_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
-import 'package:kakeibo_ui/src/services/graphql_services.dart';
-import 'package:kakeibo_ui/src/services/locator.dart';
 
 class DayDetailFormWidget extends StatefulWidget {
   final Period period;
@@ -37,11 +35,11 @@ class _DayDetailFormState extends State<DayDetailFormWidget> {
       _submitting = true;
     });
 
-    await serviceLocator
-        .get<GraphQLServices>()
-        .upsertDay(widget.period, widget.day, int.parse(_selectedBudget), _selectedMemo);
+    await widget.period.upsertDay(
+      Day(dayDate: widget.day.dayDate, memo: _selectedMemo, budget: int.parse(_selectedBudget)),
+    );
 
-    Helpers.simpleSnackbar(context, 'Updated');
+    SnackbarService.simpleSnackbar(context, 'Updated');
 
     setState(() {
       _formChanged = false;
@@ -62,6 +60,7 @@ class _DayDetailFormState extends State<DayDetailFormWidget> {
   }
 
   Widget budgetInput() => DigitsOnlyInputWidget('Amount remaining in your account',
+      initialValue: _selectedBudget,
       onChanged: (text) => {
             setState(() {
               _selectedBudget = text ?? '';

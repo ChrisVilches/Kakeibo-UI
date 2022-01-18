@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/card_with_float_right_item_widget.dart';
-import 'package:kakeibo_ui/src/decoration/helpers.dart';
+import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/models/expense.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/signed_amount_widget.dart';
-import 'package:kakeibo_ui/src/services/graphql_services.dart';
-import 'package:kakeibo_ui/src/services/locator.dart';
+import 'package:kakeibo_ui/src/widgets/misc/signed_amount_widget.dart';
 
 class ExpenseListItemWidget extends StatelessWidget {
   final Expense expense;
@@ -34,10 +32,10 @@ class ExpenseListItemWidget extends StatelessWidget {
       key: Key(expense.id.toString()),
       onDismissed: (direction) {
         removeCallback();
-        Helpers.snackbarWithAction(context, "Removed", "UNDO", readdCallback);
+        SnackbarService.snackbarWithAction(context, "Removed", "UNDO", readdCallback);
       },
       confirmDismiss: (DismissDirection direction) async {
-        await serviceLocator.get<GraphQLServices>().destroyExpense(expense.id);
+        await expense.destroy();
         return true;
       },
       child: listTile,

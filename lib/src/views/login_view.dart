@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/decoration/form_validators.dart';
+import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
 import 'package:kakeibo_ui/src/exceptions/incorrect_login_exception.dart';
-import 'package:kakeibo_ui/src/home_view.dart';
+import 'package:kakeibo_ui/src/widgets/misc/app_logo_widget.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
+import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/services/user_service.dart';
-import 'decoration/extra_padding_widget.dart';
-import 'decoration/helpers.dart';
-import 'decoration/loading_icon_widget.dart';
-import 'misc_widgets/app_logo_widget.dart';
+import 'package:kakeibo_ui/src/views/home_view.dart';
 
 class LoginView extends StatefulWidget {
   static const routeName = '/login';
@@ -38,12 +38,12 @@ class _LoginState extends State<LoginView> {
     try {
       await serviceLocator.get<UserService>().login(_emailValue, _passwordValue);
     } on IncorrectLoginException catch (e) {
-      Helpers.simpleSnackbar(context, e.toString());
+      SnackbarService.simpleSnackbar(context, e.toString());
       setState(() => _loading = false);
       return;
     }
 
-    Helpers.simpleSnackbar(context, "You logged in successfully!");
+    SnackbarService.simpleSnackbar(context, "You logged in successfully!");
     Navigator.of(context).pushReplacementNamed(HomeView.routeName);
   }
 

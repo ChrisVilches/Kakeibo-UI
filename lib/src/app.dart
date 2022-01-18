@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:kakeibo_ui/src/home_view.dart';
-import 'package:kakeibo_ui/src/login_view.dart';
-import 'package:kakeibo_ui/src/splash_screen_view.dart';
-import 'create_period/create_period_view.dart';
-import 'period_list/periods_list_view.dart';
-import 'period_list/period_details_view.dart';
-import 'settings/settings_controller.dart';
-import 'settings/settings_view.dart';
+import 'package:kakeibo_ui/src/views/home_view.dart';
+import 'package:kakeibo_ui/src/views/login_view.dart';
+import 'package:kakeibo_ui/src/views/period_details_view.dart';
+import 'package:kakeibo_ui/src/views/periods_list_view.dart';
+import 'package:kakeibo_ui/src/views/splash_screen_view.dart';
+import 'package:kakeibo_ui/src/views/create_period_view.dart';
+import 'controllers/settings_controller.dart';
+import 'views/settings_view.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
-  const MyApp(
-      {Key? key, required this.settingsController, required this.navigatorKey})
+  const MyApp({Key? key, required this.settingsController, required this.navigatorKey})
       : super(key: key);
 
   final SettingsController settingsController;
@@ -56,8 +55,7 @@ class MyApp extends StatelessWidget {
           //
           // The appTitle is defined in .arb files found in the localization
           // directory.
-          onGenerateTitle: (BuildContext context) =>
-              AppLocalizations.of(context)!.appTitle,
+          onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
 
           // Define a light and dark color theme. Then, read the user's
           // preferred ThemeMode (light, dark, or system default) from the
