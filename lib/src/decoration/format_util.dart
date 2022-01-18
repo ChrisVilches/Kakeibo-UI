@@ -15,17 +15,7 @@ class FormatUtil {
 
     String symbol = '\$';
 
-    switch (_currencySymbol) {
-      case CurrencySymbol.euro:
-        symbol = '€';
-        break;
-      case CurrencySymbol.yen:
-        symbol = '¥';
-        break;
-      default:
-    }
-
-    return "$symbol${formatNumberCommas(num)}";
+    return "${_currencySymbol.symbol}${formatNumberCommas(num)}";
   }
 
   /// Configure the currency formatter globally.

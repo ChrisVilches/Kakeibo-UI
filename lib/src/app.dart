@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'package:kakeibo_ui/src/home_view.dart';
+import 'package:kakeibo_ui/src/login_view.dart';
+import 'package:kakeibo_ui/src/splash_screen_view.dart';
 import 'create_period/create_period_view.dart';
 import 'period_list/periods_list_view.dart';
 import 'period_list/period_details_view.dart';
@@ -10,12 +12,13 @@ import 'settings/settings_view.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
-  const MyApp({
-    Key? key,
-    required this.settingsController,
-  }) : super(key: key);
+  const MyApp(
+      {Key? key, required this.settingsController, required this.navigatorKey})
+      : super(key: key);
 
   final SettingsController settingsController;
+
+  final GlobalKey<NavigatorState> navigatorKey;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +36,7 @@ class MyApp extends StatelessWidget {
           // background.
           restorationScopeId: 'app',
           debugShowCheckedModeBanner: false,
+          navigatorKey: navigatorKey,
 
           // Provide the generated AppLocalizations to the MaterialApp. This
           // allows descendant Widgets to display the correct translations
@@ -46,7 +50,7 @@ class MyApp extends StatelessWidget {
           supportedLocales: const [
             Locale('en', ''), // English, no country code
           ],
-
+          initialRoute: SplashScreenView.routeName,
           // Use AppLocalizations to configure the correct application title
           // depending on the user's locale.
           //
@@ -69,15 +73,20 @@ class MyApp extends StatelessWidget {
               settings: routeSettings,
               builder: (BuildContext context) {
                 switch (routeSettings.name) {
+                  case SplashScreenView.routeName:
+                    return const SplashScreenView();
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
                   case PeriodDetailsView.routeName:
                     return const PeriodDetailsView();
                   case CreatePeriodView.routeName:
                     return const CreatePeriodView();
+                  case LoginView.routeName:
+                    return const LoginView();
                   case PeriodsListView.routeName:
-                  default:
                     return const PeriodsListView();
+                  default:
+                    return const HomeView();
                 }
               },
             );

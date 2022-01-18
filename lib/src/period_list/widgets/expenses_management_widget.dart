@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
-import 'package:kakeibo_ui/src/decoration/form_validators.dart';
 import 'package:kakeibo_ui/src/decoration/helpers.dart';
 import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
+import 'package:kakeibo_ui/src/misc_widgets/digits_only_input_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/expense.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
@@ -22,17 +21,15 @@ class ExpensesManagementWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  ExpensesManagementState createState() => ExpensesManagementState();
+  _ExpensesManagementState createState() => _ExpensesManagementState();
 }
 
-class ExpensesManagementState extends State<ExpensesManagementWidget> {
+class _ExpensesManagementState extends State<ExpensesManagementWidget> {
   List<Expense> _expenses = [];
 
   final _formKey = GlobalKey<FormState>();
   String _selectedLabel = "";
   int _selectedCost = 0;
-
-  ExpensesManagementState();
 
   @override
   void initState() {
@@ -46,16 +43,12 @@ class ExpensesManagementState extends State<ExpensesManagementWidget> {
   Widget listItem(BuildContext context, int index) {
     Expense expense = _expenses[index];
     return ExpenseListItemWidget(expense,
-        removeCallback: () =>
-            {_expenses.removeWhere((e) => e.id == expense.id)},
-        readdCallback: () => {
-              _executeCreateExpense(
-                  expense.label ?? '', expense.cost, "Added again")
-            });
+        removeCallback: () => {_expenses.removeWhere((e) => e.id == expense.id)},
+        readdCallback: () =>
+            {_executeCreateExpense(expense.label ?? '', expense.cost, "Added again")});
   }
 
-  void _executeCreateExpense(
-      String label, int cost, String successMessage) async {
+  void _executeCreateExpense(String label, int cost, String successMessage) async {
     Day updatedDay = await serviceLocator
         .get<GraphQLServices>()
         .createExpense(widget.period, widget.day, label, cost);
@@ -91,17 +84,14 @@ class ExpensesManagementState extends State<ExpensesManagementWidget> {
             },
         decoration: const InputDecoration(labelText: 'Label'));
 
-    Widget costInput = TextFormField(
+    Widget costInput = DigitsOnlyInputWidget('Cost',
         onChanged: (text) => {
-              setState(() {
-                _selectedCost = int.parse(text);
-              })
-            },
-        keyboardType: TextInputType.number,
-        // TODO: Use my custom "DigitsOnlyInputWidget" widget?
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        validator: FormValidators.amountValidator,
-        decoration: const InputDecoration(labelText: 'Cost'));
+              setState(
+                () {
+                  _selectedCost = int.parse(text ?? '');
+                },
+              )
+            });
 
     Widget submitButton = ElevatedButton.icon(
       onPressed: _submitForm,

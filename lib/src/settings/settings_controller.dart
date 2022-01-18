@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/format_util.dart';
 import 'package:kakeibo_ui/src/enums/currency_symbol.dart';
+import 'package:kakeibo_ui/src/enums/token_removal_cause.dart';
+import 'package:kakeibo_ui/src/services/locator.dart';
+import 'package:kakeibo_ui/src/services/settings_service.dart';
+import 'package:kakeibo_ui/src/services/user_service.dart';
 
-import 'settings_service.dart';
+// TODO: Learn how to use notifiers (notifyListeners).
 
 /// A class that many Widgets can interact with to read user settings, update
 /// user settings, or listen to user settings changes.
@@ -29,6 +33,7 @@ class SettingsController with ChangeNotifier {
 
     // Important! Inform listeners a change has occurred.
     notifyListeners();
+    FormatUtil.setCurrency(_currencySymbol);
   }
 
   Future<void> updateThemeMode(ThemeMode? newThemeMode) async {
@@ -46,5 +51,9 @@ class SettingsController with ChangeNotifier {
     FormatUtil.setCurrency(_currencySymbol);
     notifyListeners();
     await _settingsService.updateCurrencySymbol(newCurrencySymbol);
+  }
+
+  Future<void> logout() async {
+    await serviceLocator.get<UserService>().removeToken(TokenRemovalCause.manualLogout);
   }
 }

@@ -1,4 +1,10 @@
 {
   "editor.formatOnSave": true,
-  "dart.closingLabels": false
+  "dart.closingLabels": false,
+  "dart.lineLength": 100,
+  "[dart]": {
+    "editor.rulers": [
+      100
+    ],
+  }
 }

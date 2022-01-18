@@ -1,5 +1,3 @@
-// TODO: Move somewhere else. This is a shared widget. Should be in something like a "shared widgets" folder, or "util widgets", etc.
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakeibo_ui/src/decoration/form_validators.dart';

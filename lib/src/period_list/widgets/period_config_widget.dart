@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
+import 'package:kakeibo_ui/src/decoration/form_validators.dart';
 import 'package:kakeibo_ui/src/decoration/helpers.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
 import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
-import 'package:kakeibo_ui/src/period_list/widgets/digits_only_input_widget.dart';
+import 'package:kakeibo_ui/src/misc_widgets/digits_only_input_widget.dart';
 import 'package:kakeibo_ui/src/services/graphql_services.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 
@@ -20,10 +21,12 @@ class PeriodConfigWidget extends StatefulWidget {
 class PeriodConfigState extends State<PeriodConfigWidget> {
   final _formKey = GlobalKey<FormState>();
 
+  // TODO: Is there a nice OOP pattern in which I create some kind of "form object" and put all these things there?
   String _salaryValue = "";
   String _savingsPercentageValue = "";
   String _dailyExpensesValue = "";
   String _initialMoneyValue = "";
+  String _nameValue = "";
   bool _loading = false;
   bool _submitting = false;
   bool _formChanged = false;
@@ -44,6 +47,7 @@ class PeriodConfigState extends State<PeriodConfigWidget> {
 
       Period periodChanged = Period(
           id: widget.period.id,
+          name: _nameValue,
           salary: int.parse(_salaryValue),
           dailyExpenses: int.parse(_dailyExpensesValue),
           savingsPercentage: int.parse(_savingsPercentageValue),
@@ -51,9 +55,8 @@ class PeriodConfigState extends State<PeriodConfigWidget> {
           dateFrom: null,
           dateTo: null);
 
-      Period updatedPeriod = await serviceLocator
-          .get<GraphQLServices>()
-          .updatePeriod(periodChanged);
+      Period updatedPeriod =
+          await serviceLocator.get<GraphQLServices>().updatePeriod(periodChanged);
 
       Helpers.simpleSnackbar(context, "Updated period information.");
       debugPrint("Updated period. New data: $updatedPeriod");
@@ -72,15 +75,14 @@ class PeriodConfigState extends State<PeriodConfigWidget> {
     setState(() {
       _loading = true;
     });
-    Period period = await serviceLocator
-        .get<GraphQLServices>()
-        .fetchOnePeriod(widget.period.id!);
+    Period period = await serviceLocator.get<GraphQLServices>().fetchOnePeriod(widget.period.id!);
 
     setState(() {
       _salaryValue = period.salary.toString();
       _savingsPercentageValue = period.savingsPercentage.toString();
       _dailyExpensesValue = period.dailyExpenses.toString();
       _initialMoneyValue = period.initialMoney.toString();
+      _nameValue = period.name ?? '';
       _loading = false;
     });
   }
@@ -88,12 +90,10 @@ class PeriodConfigState extends State<PeriodConfigWidget> {
   void _removePeriod() async {
     Widget okButton = TextButton(
       child: const Text("Delete"),
-      style:
-          ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.red)),
+      style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.red)),
       onPressed: () async {
-        Period deletedPeriod = await serviceLocator
-            .get<GraphQLServices>()
-            .destroyPeriod(widget.period.id!);
+        Period deletedPeriod =
+            await serviceLocator.get<GraphQLServices>().destroyPeriod(widget.period.id!);
 
         Helpers.simpleSnackbar(context, "Removed: ${deletedPeriod.name}");
         Navigator.popUntil(context, ModalRoute.withName('/'));
@@ -104,8 +104,7 @@ class PeriodConfigState extends State<PeriodConfigWidget> {
 
     Widget cancelButton = TextButton(
       child: const Text("Cancel"),
-      style:
-          ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.grey)),
+      style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.grey)),
       onPressed: () {
         Navigator.of(context).pop();
       },
@@ -113,8 +112,8 @@ class PeriodConfigState extends State<PeriodConfigWidget> {
 
     alert = AlertDialog(
       title: const Text("Delete period?"),
-      content: const Text(
-          "Are you sure you want to remove this period? This action cannot be undone."),
+      content:
+          const Text("Are you sure you want to remove this period? This action cannot be undone."),
       actions: [okButton, cancelButton],
     );
 
@@ -142,6 +141,17 @@ class PeriodConfigState extends State<PeriodConfigWidget> {
             PaddingBottom(
               child: Column(
                 children: [
+                  TextFormField(
+                    onChanged: (text) => {
+                      setState(() {
+                        _formChanged = true;
+                        _nameValue = text;
+                      })
+                    },
+                    initialValue: _nameValue,
+                    validator: FormValidators.requiredField,
+                    decoration: const InputDecoration(labelText: "Name"),
+                  ),
                   DigitsOnlyInputWidget("This month's salary",
                       initialValue: _salaryValue,
                       onChanged: (text) => {
@@ -185,8 +195,7 @@ class PeriodConfigState extends State<PeriodConfigWidget> {
 
     Widget removeButton = ElevatedButton.icon(
       onPressed: _removePeriod,
-      style:
-          ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
       icon: const Icon(Icons.delete),
       label: const Text("Delete period"),
     );

@@ -11,14 +11,12 @@ class PeriodChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text("Chart")),
-        body: _BarChartWidget(_period));
+    return Scaffold(appBar: AppBar(title: const Text("Chart")), body: _BarChartWidget(_period));
   }
 }
 
 class _BarChartWidget extends StatelessWidget {
-  List<charts.Series<dynamic, String>> _seriesList = [];
+  late final List<charts.Series<dynamic, String>> _seriesList;
   final bool _animate = true;
   final Period _period;
 
@@ -70,8 +68,7 @@ class _BarChartWidget extends StatelessWidget {
         _seriesList,
         animate: _animate,
         behaviors: [charts.SeriesLegend()],
-        defaultRenderer: charts.BarRendererConfig(
-            groupingType: charts.BarGroupingType.grouped),
+        defaultRenderer: charts.BarRendererConfig(groupingType: charts.BarGroupingType.grouped),
       ),
     );
   }

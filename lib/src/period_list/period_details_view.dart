@@ -28,6 +28,7 @@ class PeriodDetailState extends State<PeriodDetailsView> {
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
+    debugPrint("Setting period detail");
     await _setPeriodDetail();
 
     if (_shouldShowReminderConfig()) {

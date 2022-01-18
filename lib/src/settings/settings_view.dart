@@ -3,10 +3,6 @@ import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/enums/currency_symbol.dart';
 import 'settings_controller.dart';
 
-/// Displays the various settings that can be customized by the user.
-///
-/// When a user changes a setting, the SettingsController is updated and
-/// Widgets that listen to the SettingsController are rebuilt.
 class SettingsView extends StatelessWidget {
   const SettingsView({Key? key, required this.controller}) : super(key: key);
 
@@ -17,9 +13,7 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget themeDropdown = DropdownButton<ThemeMode>(
-      // Read the selected themeMode from the controller
       value: controller.themeMode,
-      // Call the updateThemeMode method any time the user selects a theme.
       onChanged: controller.updateThemeMode,
       items: const [
         DropdownMenuItem(
@@ -40,20 +34,15 @@ class SettingsView extends StatelessWidget {
     Widget currencySymbolDropdown = DropdownButton<CurrencySymbol>(
       value: controller.currencySymbol,
       onChanged: controller.updateCurrencySymbol,
-      items: const [
-        DropdownMenuItem(
-          value: CurrencySymbol.dollar,
-          child: Text('\$'),
-        ),
-        DropdownMenuItem(
-          value: CurrencySymbol.euro,
-          child: Text('€'),
-        ),
-        DropdownMenuItem(
-          value: CurrencySymbol.yen,
-          child: Text('¥'),
-        )
-      ],
+      items: CurrencySymbol.values
+          .map((v) => DropdownMenuItem(value: v, child: Text(v.symbol)))
+          .toList(),
+    );
+
+    Widget logoutButton = ElevatedButton(
+      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
+      onPressed: controller.logout,
+      child: const Text("Logout"),
     );
 
     return Scaffold(
@@ -61,13 +50,9 @@ class SettingsView extends StatelessWidget {
         title: const Text('Settings'),
       ),
       body: ExtraPadding(
-        // Glue the SettingsController to the theme selection DropdownButton.
-        //
-        // When a user selects a theme from the dropdown list, the
-        // SettingsController is updated, which rebuilds the MaterialApp.
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [themeDropdown, currencySymbolDropdown],
+          children: [themeDropdown, currencySymbolDropdown, logoutButton],
         ),
       ),
     );

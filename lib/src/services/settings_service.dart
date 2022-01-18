@@ -5,8 +5,7 @@ import 'package:kakeibo_ui/src/enums/currency_symbol.dart';
 
 class SettingsService {
   Future<ThemeMode> themeMode() async {
-    String? themeValue =
-        await serviceLocator.get<FlutterSecureStorage>().read(key: 'theme');
+    String? themeValue = await serviceLocator.get<FlutterSecureStorage>().read(key: 'theme');
 
     if (themeValue == 'dark') {
       return ThemeMode.dark;
@@ -18,28 +17,14 @@ class SettingsService {
   }
 
   Future<void> updateThemeMode(ThemeMode theme) async {
-    String themeName = 'system';
-
-    if (theme == ThemeMode.light) {
-      themeName = 'light';
-    } else if (theme == ThemeMode.dark) {
-      themeName = 'dark';
-    }
-
-    await serviceLocator
-        .get<FlutterSecureStorage>()
-        .write(key: 'theme', value: themeName);
+    await serviceLocator.get<FlutterSecureStorage>().write(key: 'theme', value: theme.name);
   }
 
   Future<CurrencySymbol> currencySymbol() async {
-    String? symbol = await serviceLocator
-        .get<FlutterSecureStorage>()
-        .read(key: 'currencySymbol');
+    String? symbol = await serviceLocator.get<FlutterSecureStorage>().read(key: 'currencySymbol');
 
     for (final CurrencySymbol sym in CurrencySymbol.values) {
-      if (sym.toString() == symbol) {
-        return sym;
-      }
+      if (sym.toString() == symbol) return sym;
     }
 
     return CurrencySymbol.dollar;

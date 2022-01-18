@@ -52,9 +52,14 @@ class DayListItemWidget extends StatelessWidget {
     if (totalExpense > 0) {
       columnChildren.add(const SizedBox(height: 5));
       columnChildren.add(
-        Text(
-            "${day.expenses.length} expenses (${FormatUtil.formatNumberCurrency(day.totalExpense())})",
-            style: const TextStyle(color: Colors.grey)),
+        Row(
+          children: [
+            const Icon(Icons.receipt_long, size: 15, color: Colors.grey),
+            const SizedBox(width: 5),
+            Text('-' + FormatUtil.formatNumberCurrency(day.totalExpense()),
+                style: const TextStyle(color: Colors.grey))
+          ],
+        ),
       );
     }
 
