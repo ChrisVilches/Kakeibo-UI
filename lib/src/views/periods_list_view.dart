@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/create_period/create_period_view.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
-import 'package:kakeibo_ui/src/services/graphql_services.dart';
-import 'package:kakeibo_ui/src/services/locator.dart';
-import 'package:kakeibo_ui/src/settings/settings_view.dart';
+import 'package:kakeibo_ui/src/views/create_period_view.dart';
+import 'package:kakeibo_ui/src/views/settings_view.dart';
 
 import 'period_details_view.dart';
 
