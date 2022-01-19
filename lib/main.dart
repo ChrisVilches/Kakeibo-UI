@@ -16,7 +16,7 @@ Future<void> main() async {
   await dotenv.load(fileName: kReleaseMode ? ".env.production" : ".env.development");
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  setUpLocator();
+  setUpLocator(navigatorKey);
 
   await serviceLocator.get<UserService>().loadStoredToken();
   await serviceLocator<GQLClient>().initialize();
@@ -27,7 +27,7 @@ Future<void> main() async {
    * TODO: This hook will execute even if the user opens the app after the token has expired, and this will make the splash screen get skipped.
    */
   serviceLocator.get<UserService>().onTokenRemoved = (TokenRemovalCause cause) async {
-    print("Token removal (hook executed), cause: $cause");
+    // print("Token removal (hook executed), cause: $cause");
     SnackbarService.simpleSnackbar(navigatorKey.currentContext!, cause.message);
     Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(LoginView.routeName);
   };

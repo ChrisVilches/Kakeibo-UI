@@ -1,51 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/card_with_float_right_item_widget.dart';
+import 'package:kakeibo_ui/src/models/day_data.dart';
 import 'package:kakeibo_ui/src/widgets/misc/projection_widget.dart';
 import 'package:kakeibo_ui/src/widgets/misc/remaining_budget_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/widgets/misc/burndown_widget.dart';
 import 'package:kakeibo_ui/src/widgets/misc/signed_amount_widget.dart';
+import 'package:provider/provider.dart';
 
 class DayDetailSummaryWidget extends StatelessWidget {
-  final Day day;
-  final int? remaining;
-  final int burndown;
-  final int? projection;
-  final int? diff;
-
-  const DayDetailSummaryWidget(
-      {Key? key,
-      required this.day,
-      required this.remaining,
-      required this.burndown,
-      required this.projection,
-      required this.diff})
-      : super(key: key);
+  const DayDetailSummaryWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    DayData dayData = Provider.of<DayData>(context);
+    Day day = dayData.day;
+
     var remainingCard = CardWithFloatRightItemWidget(
       icon: const Icon(Icons.attach_money_rounded),
       label: const Text("Remaining cash"),
-      rightWidget: RemainingBudgetWidget(remaining),
+      rightWidget: RemainingBudgetWidget(dayData.remaining),
     );
 
     var burndownCard = CardWithFloatRightItemWidget(
       icon: const Icon(Icons.trending_down),
       label: const Text("Burndown"),
-      rightWidget: BurndownWidget(burndown),
+      rightWidget: BurndownWidget(dayData.burndown),
     );
 
     var projectionCard = CardWithFloatRightItemWidget(
       icon: const Icon(Icons.waterfall_chart),
       label: const Text("Projection"),
-      rightWidget: ProjectionWidget(projection),
+      rightWidget: ProjectionWidget(dayData.projection),
     );
 
     var diffCard = CardWithFloatRightItemWidget(
       icon: const Icon(Icons.exposure_outlined),
       label: const Text("Difference"),
-      rightWidget: SignedAmountWidget(diff),
+      rightWidget: SignedAmountWidget(dayData.diff),
     );
 
     return Column(

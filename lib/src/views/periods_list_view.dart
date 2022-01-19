@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
+import 'package:kakeibo_ui/src/models/extensions/period_queries.dart';
 import 'package:kakeibo_ui/src/views/create_period_view.dart';
 import 'package:kakeibo_ui/src/views/settings_view.dart';
-
 import 'period_details_view.dart';
 
 class PeriodsListView extends StatefulWidget {
@@ -33,7 +33,7 @@ class _PeriodListState extends State<PeriodsListView> {
 
     debugPrint("Loading period list...");
 
-    List<Period> result = await Period.fetchAll();
+    List<Period> result = await PeriodQueries.fetchAll();
 
     setState(() {
       _periods = result;
@@ -96,13 +96,11 @@ class _PeriodListState extends State<PeriodsListView> {
               children: [const SizedBox(height: 5), Text('${dateRange[0]} ~ ${dateRange[1]}')],
             ),
             leading: const Icon(Icons.monetization_on_outlined, color: Colors.pink, size: 24.0),
-            onTap: () async {
-              await Navigator.pushNamed(context, PeriodDetailsView.routeName,
-                  arguments: {'id': period.id});
-
-              // TODO: Probably not very good to reload the period list here. (it's easy to forget, and there are many places)
-              // A lifecycle event would be a lot better. But how?
-              _loadPeriodList();
+            onTap: () {
+              Navigator.of(context).pushNamed(
+                PeriodDetailsView.routeName,
+                arguments: {'id': period.id},
+              ).then((_) => _loadPeriodList());
             },
           );
         },

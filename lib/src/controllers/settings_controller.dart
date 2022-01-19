@@ -6,13 +6,6 @@ import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/services/settings_service.dart';
 import 'package:kakeibo_ui/src/services/user_service.dart';
 
-// TODO: Learn how to use notifiers (notifyListeners).
-
-/// A class that many Widgets can interact with to read user settings, update
-/// user settings, or listen to user settings changes.
-///
-/// Controllers glue Data Services to Flutter Widgets. The SettingsController
-/// uses the SettingsService to store and retrieve user settings.
 class SettingsController with ChangeNotifier {
   SettingsController(this._settingsService);
 
@@ -24,14 +17,10 @@ class SettingsController with ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
   CurrencySymbol get currencySymbol => _currencySymbol;
 
-  /// Load the user's settings from the SettingsService. It may load from a
-  /// local database or the internet. The controller only knows it can load the
-  /// settings from the service.
   Future<void> loadSettings() async {
     _themeMode = await _settingsService.themeMode();
     _currencySymbol = await _settingsService.currencySymbol();
 
-    // Important! Inform listeners a change has occurred.
     notifyListeners();
     FormatUtil.setCurrency(_currencySymbol);
   }

@@ -5,6 +5,7 @@ import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
 import 'package:kakeibo_ui/src/widgets/misc/digits_only_input_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
+import 'package:kakeibo_ui/src/models/extensions/period_queries.dart';
 
 class DayDetailFormWidget extends StatefulWidget {
   final Period period;

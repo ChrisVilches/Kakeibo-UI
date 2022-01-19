@@ -2,35 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/card_with_float_right_item_widget.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/decoration/format_util.dart';
+import 'package:kakeibo_ui/src/models/day_data.dart';
+import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/widgets/misc/projection_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
-import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/widgets/misc/memo_widget.dart';
 import 'package:kakeibo_ui/src/widgets/misc/signed_amount_widget.dart';
-import 'package:kakeibo_ui/src/widgets/day_detail_widget.dart';
+import 'package:kakeibo_ui/src/widgets/scaffolds/day_detail_scaffold.dart';
+import 'package:provider/provider.dart';
 
 class DayListItemWidget extends StatelessWidget {
-  final Day day;
-  final Period period;
-  final int burndown;
-  final int? diff;
-  final int? remaining;
-  final int? projection;
   final Function dayDetailModalClosedCallback;
 
-  const DayListItemWidget(
-      {Key? key,
-      required this.day,
-      required this.period,
-      required this.burndown,
-      this.diff,
-      this.remaining,
-      this.projection,
-      required this.dayDetailModalClosedCallback})
-      : super(key: key);
+  const DayListItemWidget({Key? key, required this.dayDetailModalClosedCallback}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    DayData dayData = Provider.of<DayData>(context);
+    Day day = dayData.day;
+
     var icon = Icon(Icons.check_rounded,
         color: day.budget == null ? Colors.grey : Colors.green, size: 20.0);
 
@@ -38,15 +28,15 @@ class DayListItemWidget extends StatelessWidget {
     int totalExpense = day.totalExpense();
 
     if (day.budget == null) {
-      columnChildren.add(ProjectionWidget(projection));
+      columnChildren.add(ProjectionWidget(dayData.projection));
     } else {
       columnChildren.add(Text(FormatUtil.formatNumberCurrency(day.budget),
           style: const TextStyle(fontWeight: FontWeight.bold)));
     }
 
-    if (diff != null) {
+    if (dayData.diff != null) {
       columnChildren.add(const SizedBox(height: 5));
-      columnChildren.add(SignedAmountWidget(diff));
+      columnChildren.add(SignedAmountWidget(dayData.diff));
     }
 
     if (totalExpense > 0) {
@@ -80,24 +70,22 @@ class DayListItemWidget extends StatelessWidget {
 
     return InkWell(
       onTap: () async {
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return DayDetailWidget(
-                burndown: burndown,
-                diff: diff,
-                remaining: remaining,
-                projection: projection,
-                period: period,
-                day: day,
-              );
-            },
-            fullscreenDialog: true,
-          ),
-        );
-
-        dayDetailModalClosedCallback();
+        Navigator.of(context)
+            .push(
+              MaterialPageRoute(
+                builder: (_) {
+                  return MultiProvider(
+                    providers: [
+                      Provider<Period>.value(value: context.read<Period>()),
+                      Provider<DayData>.value(value: context.read<DayData>()),
+                    ],
+                    builder: (_, __) => const DayDetailScaffold(),
+                  );
+                },
+                fullscreenDialog: true,
+              ),
+            )
+            .then((_) => dayDetailModalClosedCallback);
       },
       child: card,
     );

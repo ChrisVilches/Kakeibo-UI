@@ -7,6 +7,7 @@ import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/expense.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/widgets/day_detail/expenses_tab/expense_list_item_widget.dart';
+import 'package:kakeibo_ui/src/models/extensions/day_queries.dart';
 
 class ExpensesManagementWidget extends StatefulWidget {
   final Period period;
@@ -38,6 +39,8 @@ class _ExpensesManagementState extends State<ExpensesManagementWidget> {
   // TODO: Deletion doesn't work properly. Sometimes I get the "dismissed element is part of tree"
   //       But anyway, I have to modify a lot of things, not just that (e.g. update all views when a change happens,
   //       without having to restart the app).
+  //       I have to test all of this, specially since I introduced providers, data might get messed up.
+  //       Expense deletion also doesn't work I think (doesn't update the list I think, not sure though.)
   Widget listItem(BuildContext context, int index) {
     Expense expense = _expenses[index];
     return ExpenseListItemWidget(expense,

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
+import 'package:kakeibo_ui/src/models/day_data.dart';
+import 'package:kakeibo_ui/src/models/extensions/period_queries.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/services/table_calculator.dart';
 import 'package:kakeibo_ui/src/widgets/day_list_item_widget.dart';
-import 'package:kakeibo_ui/src/widgets/period_chart_widget.dart';
-import 'package:kakeibo_ui/src/widgets/period_config_widget.dart';
-
-// TODO: Not sure about all the nesting, but it's OK probably, since Dart has "required" keyword,
-//       which makes it easier not to forget a callback or something like that.
+import 'package:kakeibo_ui/src/widgets/scaffolds/period_chart_scaffold.dart';
+import 'package:kakeibo_ui/src/widgets/scaffolds/period_config_scaffold.dart';
+import 'package:provider/provider.dart';
 
 class PeriodDetailsView extends StatefulWidget {
   static const routeName = '/period_detail';
@@ -19,14 +19,14 @@ class PeriodDetailsView extends StatefulWidget {
 
 class PeriodDetailState extends State<PeriodDetailsView> {
   Period _period = Period();
-  late TableCalculator _table;
+  late List<DayData> _dataTable;
 
   final bool animate = true;
 
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    debugPrint("Setting period detail");
+    debugPrint("Loading period detail...");
     await _setPeriodDetail();
 
     if (_shouldShowReminderConfig()) {
@@ -39,7 +39,7 @@ class PeriodDetailState extends State<PeriodDetailsView> {
           context,
           MaterialPageRoute(
             builder: (BuildContext context) {
-              return PeriodConfigWidget(period: _period);
+              return PeriodConfigScaffold(period: _period);
             },
             fullscreenDialog: true,
           ),
@@ -92,13 +92,13 @@ class PeriodDetailState extends State<PeriodDetailsView> {
     final arguments = ModalRoute.of(context)!.settings.arguments as Map;
     int periodId = arguments['id'];
 
-    final periodResult = await Period.fetchOne(periodId);
+    final periodResult = await PeriodQueries.fetchOne(periodId);
 
     setState(() {
       _period = periodResult;
     });
 
-    _table = TableCalculator(_period);
+    _dataTable = TableCalculator.obtainData(_period);
   }
 
   String _periodDetailTitle() {
@@ -107,19 +107,18 @@ class PeriodDetailState extends State<PeriodDetailsView> {
   }
 
   Widget listItem(BuildContext context, int index) {
-    final day = _period.fullDays[index];
+    Widget item = DayListItemWidget(dayDetailModalClosedCallback: () {
+      debugPrint("Refreshing period detail...");
+      _setPeriodDetail();
+    });
 
-    return DayListItemWidget(
-        period: _period,
-        day: day,
-        burndown: _table.burndown[index],
-        projection: _table.projections[index],
-        remaining: _table.remaining[index],
-        diff: _table.diff[index],
-        dayDetailModalClosedCallback: () {
-          debugPrint("Refreshing period detail...");
-          _setPeriodDetail();
-        });
+    return MultiProvider(
+      providers: [
+        Provider<Period>(create: (_) => _period),
+        Provider<DayData>(create: (_) => _dataTable[index]),
+      ],
+      builder: (BuildContext context, Widget? _) => item,
+    );
   }
 
   @override
@@ -128,14 +127,14 @@ class PeriodDetailState extends State<PeriodDetailsView> {
       return const Center(child: LoadingIcon());
     }
 
-    debugPrint("ID: ${_period.id}");
-    debugPrint("days amount: ${_period.fullDays.length}");
-    debugPrint("initial money: ${_period.initialMoney}");
-    debugPrint("salary: ${_period.salary}");
-    debugPrint("savingsPercentage: ${_period.savingsPercentage}");
-    debugPrint("useable: ${_period.useable()}");
-    debugPrint("limit: ${_period.limit()}");
-    debugPrint("useable per day: ${_period.useablePerDay()}");
+    debugPrint("▶  Period detail (ID: ${_period.id})");
+    debugPrint("   days amount: ${_period.fullDays.length}");
+    debugPrint("   initial money: ${_period.initialMoney}");
+    debugPrint("   salary: ${_period.salary}");
+    debugPrint("   savingsPercentage: ${_period.savingsPercentage}");
+    debugPrint("   useable: ${_period.useable()}");
+    debugPrint("   limit: ${_period.limit()}");
+    debugPrint("   useable per day: ${_period.useablePerDay()}");
 
     Widget dayList = ListView.builder(
       restorationId: 'PeriodDetailsView_DayList',
@@ -157,7 +156,7 @@ class PeriodDetailState extends State<PeriodDetailsView> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => PeriodChartWidget(_period),
+                  builder: (BuildContext context) => PeriodChartScaffold(_period),
                   fullscreenDialog: true,
                 ),
               );

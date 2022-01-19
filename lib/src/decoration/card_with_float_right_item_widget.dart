@@ -8,10 +8,7 @@ class CardWithFloatRightItemWidget extends StatelessWidget {
   final Widget rightWidget;
 
   const CardWithFloatRightItemWidget(
-      {Key? key,
-      required this.icon,
-      required this.label,
-      required this.rightWidget})
+      {Key? key, required this.icon, required this.label, required this.rightWidget})
       : super(key: key);
 
   @override

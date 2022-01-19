@@ -2,8 +2,10 @@ import 'dart:async';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:kakeibo_ui/src/enums/token_removal_cause.dart';
+import 'package:kakeibo_ui/src/exceptions/http_request_exception.dart';
 import 'package:kakeibo_ui/src/exceptions/not_logged_in_exception.dart';
 import 'package:kakeibo_ui/src/exceptions/signature_expired_exception.dart';
+import 'package:kakeibo_ui/src/services/global_error_handler_service.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:collection/collection.dart';
 import 'package:kakeibo_ui/src/services/user_service.dart';
@@ -28,16 +30,10 @@ class GQLClient {
     _client = GraphQLClient(link: link, cache: GraphQLCache());
   }
 
-  // TODO: The fact that queries require some parameters (but it's never explicit... I have to guess) and not some other ones is also a code smell.
-
-  // TODO: Execution of query is stopped abruptly simply by throwing an exception. Not sure about this pattern.
-  //       (The exception is logged by Flutter and doesn't crash the app, so it works).
   void _throwErrorsFromQueryResult(QueryResult result) {
     if (!result.hasException) return;
 
-    if (result.exception!.graphqlErrors.isEmpty) {
-      throw Exception("An error happened");
-    }
+    if (result.exception!.graphqlErrors.isEmpty) throw Exception("An error happened");
 
     List<GraphQLError> errorList = result.exception!.graphqlErrors;
 
@@ -50,6 +46,17 @@ class GQLClient {
       serviceLocator.get<UserService>().removeToken(TokenRemovalCause.sessionExpired);
       throw SignatureExpiredException();
     }
+
+    String joinedMessages = errorList.map((GraphQLError e) => e.message).join(", ");
+
+    final err = HttpRequestException(joinedMessages);
+
+    // NOTE: Throwing the exception is recommended for GraphQL queries. When a query error happens,
+    //       most queries will throw a different exception when trying to build an object out of
+    //       an empty JSON. Throwing here would raise this one first, which is more useful than
+    //       getting something like a "null error", since it usually contains validation errors
+    //       from the server, etc.
+    serviceLocator.get<GlobalErrorHandlerService>().signalError(err, doThrow: true);
   }
 
   bool _containsErrorCode(List<GraphQLError>? errors, String code) {

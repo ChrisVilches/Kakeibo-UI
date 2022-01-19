@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
+import 'package:kakeibo_ui/src/models/day_data.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/services/table_calculator.dart';
 
-class PeriodChartWidget extends StatelessWidget {
+class PeriodChartScaffold extends StatelessWidget {
   final Period _period;
 
-  const PeriodChartWidget(this._period, {Key? key}) : super(key: key);
+  const PeriodChartScaffold(this._period, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +26,16 @@ class _BarChartWidget extends StatelessWidget {
   }
 
   void _setSeries() {
-    final table = TableCalculator(_period);
-    final int n = table.projections.length;
+    List<DayData> dayDataTable = TableCalculator.obtainData(_period);
 
     List<_Bar> projectionData = [];
     List<_Bar> burndownData = [];
     List<_Bar> remainingData = [];
 
-    // TODO: Add correct labels (if it gets too crowded, then remove them).
-    for (int i = 0; i < n; i++) {
-      projectionData.add(_Bar(i.toString(), table.projections[i]));
-      burndownData.add(_Bar(i.toString(), table.burndown[i]));
-      remainingData.add(_Bar(i.toString(), table.remaining[i]));
+    for (int i = 0; i < dayDataTable.length; i++) {
+      projectionData.add(_Bar(i.toString(), dayDataTable[i].projection));
+      burndownData.add(_Bar(i.toString(), dayDataTable[i].burndown));
+      remainingData.add(_Bar(i.toString(), dayDataTable[i].remaining));
     }
 
     _seriesList = [

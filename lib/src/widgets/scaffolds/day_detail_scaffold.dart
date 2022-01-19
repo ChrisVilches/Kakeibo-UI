@@ -2,37 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/decoration/padding_top_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
+import 'package:kakeibo_ui/src/models/day_data.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/widgets/day_detail/expenses_tab/expenses_management_widget.dart';
 import 'package:kakeibo_ui/src/widgets/day_detail/summary_tab/day_detail_form_widget.dart';
 import 'package:kakeibo_ui/src/widgets/day_detail/summary_tab/day_detail_summary_widget.dart';
+import 'package:provider/provider.dart';
 
-class DayDetailWidget extends StatefulWidget {
-  final int burndown;
-  final int? remaining;
-  final int? projection;
-  final int? diff;
-  final Period period;
-  final Day day;
+class DayDetailScaffold extends StatelessWidget {
+  const DayDetailScaffold({Key? key}) : super(key: key);
 
-  const DayDetailWidget(
-      {Key? key,
-      required this.period,
-      required this.day,
-      required this.burndown,
-      this.remaining,
-      this.projection,
-      this.diff})
-      : super(key: key);
-
-  @override
-  DayDetailState createState() => DayDetailState();
-}
-
-class DayDetailState extends State<DayDetailWidget> {
   @override
   Widget build(BuildContext context) {
-    final String title = "${widget.period.name} - ${DateUtil.formatDateSlash(widget.day.dayDate)}";
+    Period period = Provider.of<Period>(context);
+    Day day = Provider.of<DayData>(context).day;
+
+    final String title = "${period.name} - ${DateUtil.formatDateSlash(day.dayDate)}";
 
     return DefaultTabController(
       length: 2,
@@ -57,17 +42,12 @@ class DayDetailState extends State<DayDetailWidget> {
               PaddingTop(
                 child: Column(
                   children: [
-                    DayDetailSummaryWidget(
-                        day: widget.day,
-                        remaining: widget.remaining,
-                        burndown: widget.burndown,
-                        projection: widget.projection,
-                        diff: widget.diff),
-                    DayDetailFormWidget(period: widget.period, day: widget.day)
+                    const DayDetailSummaryWidget(),
+                    DayDetailFormWidget(period: period, day: day)
                   ],
                 ),
               ),
-              ExpensesManagementWidget(day: widget.day, period: widget.period),
+              ExpensesManagementWidget(day: day, period: period),
             ],
           ),
         ),

@@ -12,9 +12,6 @@ class FormatUtil {
 
   static String formatNumberCurrency(int? num) {
     if (num == null) return '';
-
-    String symbol = '\$';
-
     return "${_currencySymbol.symbol}${formatNumberCommas(num)}";
   }
 

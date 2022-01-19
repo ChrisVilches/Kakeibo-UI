@@ -1,86 +1,103 @@
 import 'package:kakeibo_ui/src/models/day.dart';
+import 'package:kakeibo_ui/src/models/day_data.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 
 /// Logic for generating the full table (all data necessary for graphs and other views).
 class TableCalculator {
-  final Period _period;
+  static List<DayData> obtainData(Period period) {
+    List<int?> remaining = _getRemaining(period);
+    List<int> dayExpenses = _getExpenses(period);
+    List<int> burndown = _getBurndown(period);
+    List<int?> projections = _getProjections(period, remaining, dayExpenses);
+    List<int?> diff = _getDiff(period, remaining, burndown);
 
-  late final List<int?> projections = [];
-  late final List<int?> remaining = [];
-  late final List<int> burndown = [];
-  late final List<int?> diff = [];
-  late final List<int> dayExpenses = [];
-
-  TableCalculator(this._period) {
-    _setExpenses();
-    _setBurndown();
-    _setRemaining();
-    _setProjections();
-    _setDiff();
+    List<DayData> data = [];
 
     assert(projections.length == remaining.length);
     assert(projections.length == burndown.length);
     assert(projections.length == diff.length);
     assert(projections.length == dayExpenses.length);
+
+    for (int i = 0; i < projections.length; i++) {
+      data.add(DayData(
+          day: period.fullDays[i],
+          projection: projections[i],
+          remaining: remaining[i],
+          burndown: burndown[i],
+          diff: diff[i],
+          dayExpenses: dayExpenses[i]));
+    }
+
+    return data;
   }
 
-  void _setProjections() {
+  static List<int?> _getProjections(
+      Period period, List<int?> remainingList, List<int> expensesList) {
+    List<int?> result = [];
     int expenseAccum = 0;
-    int currValue =
-        remaining[0] == null ? _period.initialMoney! : remaining[0]!;
+    int currValue = remainingList[0] == null ? period.salary! : remainingList[0]!;
 
-    for (int i = 0; i < _period.fullDays.length; i++) {
-      Day day = _period.fullDays[i];
+    for (int i = 0; i < period.fullDays.length; i++) {
+      Day day = period.fullDays[i];
 
-      expenseAccum += dayExpenses[i];
+      expenseAccum += expensesList[i];
 
       currValue -= expenseAccum;
 
       if (day.budget == null) {
-        projections.add(currValue);
+        result.add(currValue);
       } else {
-        projections.add(null);
-        currValue = remaining[i]!;
+        result.add(null);
+        currValue = remainingList[i]!;
         expenseAccum = 0;
       }
 
-      currValue -= _period.dailyExpenses!;
+      currValue -= period.dailyExpenses!;
     }
+    return result;
   }
 
-  void _setDiff() {
-    for (int i = 0; i < _period.fullDays.length; i++) {
-      Day day = _period.fullDays[i];
+  static List<int?> _getDiff(Period period, List<int?> remainingList, List<int> burndownList) {
+    List<int?> result = [];
+    for (int i = 0; i < period.fullDays.length; i++) {
+      Day day = period.fullDays[i];
       if (day.budget == null) {
-        diff.add(null);
+        result.add(null);
       } else {
-        int rem = remaining[i]!;
-        int burn = burndown[i];
-        diff.add(rem - burn);
+        int rem = remainingList[i]!;
+        int burn = burndownList[i];
+        result.add(rem - burn);
       }
     }
+    return result;
   }
 
-  void _setRemaining() {
-    for (Day d in _period.fullDays) {
+  static List<int?> _getRemaining(Period period) {
+    List<int?> result = [];
+    for (Day d in period.fullDays) {
       if (d.budget == null) {
-        remaining.add(null);
+        result.add(null);
       } else {
-        remaining.add(d.budget! - _period.limit());
+        result.add(d.budget! - period.limit());
       }
     }
+    return result;
   }
 
-  void _setExpenses() {
-    for (Day d in _period.fullDays) {
-      dayExpenses.add(d.totalExpense());
+  static List<int> _getExpenses(Period period) {
+    List<int> result = [];
+    for (Day d in period.fullDays) {
+      result.add(d.totalExpense());
     }
+    return result;
   }
 
-  void _setBurndown() {
-    for (int i = 0; i < _period.fullDays.length; i++) {
-      int value = _period.useable() - ((i + 1) * _period.useablePerDay());
-      burndown.add(value);
+  static List<int> _getBurndown(Period period) {
+    List<int> result = [];
+    for (int i = 0; i < period.fullDays.length; i++) {
+      int value = period.useable() - ((i + 1) * period.useablePerDay());
+      result.add(value);
     }
+    return result;
   }
 }
