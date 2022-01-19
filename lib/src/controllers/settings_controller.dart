@@ -43,6 +43,6 @@ class SettingsController with ChangeNotifier {
   }
 
   Future<void> logout() async {
-    await serviceLocator.get<UserService>().removeToken(TokenRemovalCause.manualLogout);
+    await serviceLocator.get<UserService>().logout();
   }
 }
