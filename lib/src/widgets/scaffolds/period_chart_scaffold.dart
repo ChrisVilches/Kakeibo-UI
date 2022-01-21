@@ -50,7 +50,8 @@ class _BarChartWidget extends StatelessWidget {
           colorFn: (_, __) => charts.MaterialPalette.gray.shadeDefault,
           domainFn: (_Bar sales, _) => sales.label,
           measureFn: (_Bar sales, _) => sales.value,
-          data: burndownData),
+          data: burndownData)
+        ..setAttribute(charts.rendererIdKey, 'line'),
       charts.Series<_Bar, String>(
           id: 'Remaining',
           colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
@@ -68,6 +69,9 @@ class _BarChartWidget extends StatelessWidget {
         animate: _animate,
         behaviors: [charts.SeriesLegend()],
         defaultRenderer: charts.BarRendererConfig(groupingType: charts.BarGroupingType.grouped),
+        customSeriesRenderers: [
+          charts.LineRendererConfig(customRendererId: 'line'),
+        ],
       ),
     );
   }

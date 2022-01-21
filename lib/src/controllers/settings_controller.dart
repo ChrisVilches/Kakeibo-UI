@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/format_util.dart';
 import 'package:kakeibo_ui/src/enums/currency_symbol.dart';
-import 'package:kakeibo_ui/src/enums/token_removal_cause.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/services/settings_service.dart';
 import 'package:kakeibo_ui/src/services/user_service.dart';

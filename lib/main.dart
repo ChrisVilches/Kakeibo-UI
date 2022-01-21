@@ -26,8 +26,9 @@ Future<void> main() async {
   /**
    * TODO: This hook will execute even if the user opens the app after the token has expired, and this will make the splash screen get skipped.
    */
+  // NOTE: Logout could happen from any screen, therefore it's necessary to have a mechanism
+  //       to catch the logout globally.
   serviceLocator.get<UserService>().onTokenRemoved = (TokenRemovalCause cause) async {
-    // print("Token removal (hook executed), cause: $cause");
     SnackbarService.simpleSnackbar(navigatorKey.currentContext!, cause.message);
     Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(LoginView.routeName);
   };

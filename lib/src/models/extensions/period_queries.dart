@@ -9,7 +9,7 @@ extension PeriodQueries on Period {
   static Future<List<Period>> fetchAll() async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
       """
-      query {
+      {
         fetchPeriods {
           id
           name
@@ -25,7 +25,7 @@ extension PeriodQueries on Period {
   static Future<Period> fetchOne(int id) async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
       """
-      query FetchOnePeriod(\$id: ID!) {
+      query(\$id: ID!) {
         fetchOnePeriod(id: \$id) {
           id
           name
@@ -57,7 +57,7 @@ extension PeriodQueries on Period {
   static Future<Period> create(String name, DateTime dateFrom, DateTime dateTo) async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
       """
-      mutation CreatePeriod(\$input: PeriodsCreateInput!) {
+      mutation(\$input: PeriodsCreateInput!) {
         createPeriod(input: \$input) {
           id
           name
@@ -80,7 +80,7 @@ extension PeriodQueries on Period {
   static Future<Period> update(Period period) async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
       """
-      mutation UpdatePeriod(\$input: PeriodsUpdateInput!) {
+      mutation(\$input: PeriodsUpdateInput!) {
         updatePeriod(input: \$input) {
           id
           name
@@ -97,7 +97,7 @@ extension PeriodQueries on Period {
   Future<Day> upsertDay(Day day) async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
       """
-      mutation UpsertDayQuery(\$input: DaysUpsertInput!) {
+      mutation(\$input: DaysUpsertInput!) {
         upsertDay(input: \$input) {
           id
           budget
@@ -122,7 +122,7 @@ extension PeriodQueries on Period {
   Future<Period> destroy() async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
       """
-      mutation DestroyPeriod(\$input: PeriodsDestroyInput!) {
+      mutation(\$input: PeriodsDestroyInput!) {
         destroyOnePeriod(input: \$input) {
           id
           name

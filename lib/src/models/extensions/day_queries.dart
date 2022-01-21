@@ -8,7 +8,7 @@ import 'package:kakeibo_ui/src/services/locator.dart';
 extension DayQueries on Day {
   Future<Day> createExpense(Period period, String label, int cost) async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery("""
-      mutation CreateExpense(\$input: ExpensesCreateInput!) {
+      mutation(\$input: ExpensesCreateInput!) {
         createExpense(input: \$input) {
           id
           dayDate

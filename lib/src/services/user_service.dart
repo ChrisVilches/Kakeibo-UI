@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakeibo_ui/src/enums/token_removal_cause.dart';
 import 'package:kakeibo_ui/src/exceptions/incorrect_login_exception.dart';
@@ -98,6 +97,9 @@ class UserService {
      * is when the token is denied (in the backend), and then I try to open the app normally
      * as if it had a token. Then it fails (it has incorrect error handling and flow of operations, redirection, etc).
      * Other than that, there's no problem.
+     * 
+     * NOTE: Creating a user controller seems to be harder than I thought because the settings WIDGET
+     * would then need to have two controllers. Settings is OK I guess for now.
      * 
      */
 

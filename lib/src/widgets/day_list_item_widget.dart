@@ -21,6 +21,8 @@ class DayListItemWidget extends StatelessWidget {
     DayData dayData = Provider.of<DayData>(context);
     Day day = dayData.day;
 
+    // TODO: Should be possible to set the budget as null (equivalent to deleting the row in Excel)
+    //       This functionality can be added in the future (maybe move to Github issues?).
     var icon = Icon(Icons.check_rounded,
         color: day.budget == null ? Colors.grey : Colors.green, size: 20.0);
 

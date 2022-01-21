@@ -77,9 +77,11 @@ class PeriodConfigController with ChangeNotifier {
       await PeriodQueries.update(periodChanged);
       return true;
     } catch (_) {
+    } finally {
       _submitting = false;
+      notifyListeners();
     }
-    notifyListeners();
+
     return false;
   }
 }

@@ -8,7 +8,7 @@ class Expense {
   factory Expense.fromJson(Map<String, dynamic> json) {
     return Expense(
       id: int.parse(json['id']),
-      cost: int.parse(json['cost']), // BigInt (rendered as string from the backend)
+      cost: json['cost'],
       label: json['label'],
     );
   }

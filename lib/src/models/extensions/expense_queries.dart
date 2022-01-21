@@ -4,10 +4,10 @@ import 'package:kakeibo_ui/src/services/gql_client.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 
 extension ExpenseQueries on Expense {
-  Future<Expense> destroy() async {
+  Future<Expense> destroy({bool undo = false}) async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
       """
-      mutation DestroyExpense(\$input: ExpensesDestroyInput!) {
+      mutation(\$input: ExpensesDestroyInput!) {
         destroyExpense(input: \$input) {
           id
           cost
@@ -15,7 +15,7 @@ extension ExpenseQueries on Expense {
         }
       }""",
       variables: {
-        'input': {'id': id}
+        'input': {'id': id, 'undiscard': undo}
       },
     );
 
