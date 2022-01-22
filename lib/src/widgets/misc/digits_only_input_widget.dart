@@ -5,10 +5,11 @@ import 'package:kakeibo_ui/src/decoration/form_validators.dart';
 class DigitsOnlyInputWidget extends StatelessWidget {
   final String _label;
   final String? initialValue;
+  final bool required;
   final Function(String?) onChanged;
 
   const DigitsOnlyInputWidget(this._label,
-      {Key? key, required this.onChanged, this.initialValue})
+      {Key? key, this.required = true, required this.onChanged, this.initialValue})
       : super(key: key);
 
   @override
@@ -18,7 +19,7 @@ class DigitsOnlyInputWidget extends StatelessWidget {
       initialValue: initialValue,
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      validator: FormValidators.amountValidator,
+      validator: required ? FormValidators.amountValidator : null,
       decoration: InputDecoration(labelText: _label),
     );
   }

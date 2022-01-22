@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
-import 'package:kakeibo_ui/src/models/day_data.dart';
-import 'package:kakeibo_ui/src/models/extensions/period_queries.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
-import 'package:kakeibo_ui/src/services/table_calculator.dart';
 import 'package:kakeibo_ui/src/widgets/day_list_item_widget.dart';
 import 'package:kakeibo_ui/src/widgets/scaffolds/period_chart_scaffold.dart';
 import 'package:kakeibo_ui/src/widgets/scaffolds/period_config_scaffold.dart';
 import 'package:provider/provider.dart';
+
+// TODO: Divide widget (it's too long).
 
 class PeriodDetailsView extends StatefulWidget {
   static const routeName = '/period_detail';
@@ -19,37 +19,40 @@ class PeriodDetailsView extends StatefulWidget {
 
 class PeriodDetailState extends State<PeriodDetailsView> {
   Period _period = Period();
-  late List<DayData> _dataTable;
-
-  final bool animate = true;
 
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
-    debugPrint("Loading period detail...");
-    await _setPeriodDetail();
+
+    int? currPeriodId = _period.id;
+
+    NavigationController navigationCtrl = Provider.of<NavigationController>(context);
+    if (!navigationCtrl.hasPeriod()) return;
+    debugPrint("Period loaded (using the navigation controller provider)");
+
+    _period = navigationCtrl.currentPeriod!;
+
+    if (currPeriodId == _period.id) {
+      debugPrint("Period has not changed. Do not show reminder dialog");
+      return;
+    }
 
     if (_shouldShowReminderConfig()) {
-      _showReminderConfig();
+      // https://stackoverflow.com/questions/58027568/another-exception-was-thrown-packageflutter-src-widgets-navigator-dart-fail
+      Future.delayed(Duration.zero, _showReminderConfig);
     }
   }
 
   void _openConfigWidgetModal() async {
-    bool shouldRefresh = (await Navigator.push<bool?>(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) {
-              return PeriodConfigScaffold(period: _period);
-            },
-            fullscreenDialog: true,
-          ),
-        ) ??
-        false);
-
-    if (shouldRefresh) {
-      debugPrint("Refreshing period detail (because submitted the form in config widget)...");
-      _setPeriodDetail();
-    }
+    await Navigator.push<bool?>(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return PeriodConfigScaffold(period: _period);
+        },
+        fullscreenDialog: true,
+      ),
+    );
   }
 
   void _showReminderConfig() {
@@ -88,42 +91,23 @@ class PeriodDetailState extends State<PeriodDetailsView> {
     return _period.salary! == 0 || _period.initialMoney! == 0 || _period.dailyExpenses! == 0;
   }
 
-  Future<void> _setPeriodDetail() async {
-    final arguments = ModalRoute.of(context)!.settings.arguments as Map;
-    int periodId = arguments['id'];
-
-    final periodResult = await PeriodQueries.fetchOne(periodId);
-
-    setState(() {
-      _period = periodResult;
-    });
-
-    _dataTable = TableCalculator.obtainData(_period);
-  }
-
   String _periodDetailTitle() {
     if (_period.id == null) return 'Period Detail';
     return _period.name!;
   }
 
   Widget listItem(BuildContext context, int index) {
-    Widget item = DayListItemWidget(dayDetailModalClosedCallback: () {
-      debugPrint("Refreshing period detail...");
-      _setPeriodDetail();
-    });
-
-    return MultiProvider(
-      providers: [
-        Provider<Period>(create: (_) => _period),
-        Provider<DayData>(create: (_) => _dataTable[index]),
-      ],
-      builder: (BuildContext context, Widget? _) => item,
-    );
+    return DayListItemWidget(
+        day: Provider.of<NavigationController>(context).currentPeriod!.fullDays[index],
+        dayDetailModalClosedCallback: () {
+          debugPrint("Refreshing period detail...");
+          Provider.of<NavigationController>(context).reloadPeriod();
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_period.id == null) {
+    if (Provider.of<NavigationController>(context).loading) {
       return const Center(child: LoadingIcon());
     }
 

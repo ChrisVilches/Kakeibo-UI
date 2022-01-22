@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/decoration/padding_top_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
-import 'package:kakeibo_ui/src/models/day_data.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/widgets/day_detail/expenses_tab/expenses_management_widget.dart';
 import 'package:kakeibo_ui/src/widgets/day_detail/summary_tab/day_detail_form_widget.dart';
@@ -14,8 +14,8 @@ class DayDetailScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Period period = Provider.of<Period>(context);
-    Day day = Provider.of<DayData>(context).day;
+    Period period = Provider.of<NavigationController>(context).currentPeriod!;
+    Day day = Provider.of<NavigationController>(context).currentDay!;
 
     final String title = "${period.name} - ${DateUtil.formatDateSlash(day.dayDate)}";
 
@@ -47,7 +47,7 @@ class DayDetailScaffold extends StatelessWidget {
                   ],
                 ),
               ),
-              ExpensesManagementWidget(day: day, period: period),
+              const ExpensesManagementWidget(),
             ],
           ),
         ),

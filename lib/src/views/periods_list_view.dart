@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/models/extensions/period_queries.dart';
 import 'package:kakeibo_ui/src/views/create_period_view.dart';
 import 'package:kakeibo_ui/src/views/settings_view.dart';
+import 'package:provider/provider.dart';
 import 'period_details_view.dart';
 
 class PeriodsListView extends StatefulWidget {
@@ -15,36 +17,47 @@ class PeriodsListView extends StatefulWidget {
   _PeriodListState createState() => _PeriodListState();
 }
 
-class _PeriodListState extends State<PeriodsListView> {
-  bool _loading = true;
-
-  List<Period> _periods = [];
-
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    await _loadPeriodList();
+class _PeriodListState extends State<PeriodsListView> with SingleTickerProviderStateMixin {
+  void _triggerReload() {
+    debugPrint("Reloading periods list...");
+    setState(() {});
   }
 
-  Future<void> _loadPeriodList() async {
-    setState(() {
-      _loading = true;
-    });
+  Widget mainContent(List<Period> periods) {
+    return ListView.builder(
+      restorationId: 'PeriodsListView',
+      itemCount: periods.length,
+      itemBuilder: (BuildContext context, int index) {
+        final period = periods[index];
 
-    debugPrint("Loading period list...");
+        List<String> dateRange = DateUtil.formatDayRanges(period.dateFrom!, period.dateTo!);
 
-    List<Period> result = await PeriodQueries.fetchAll();
+        return ListTile(
+          title: Text('${period.name}'),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [const SizedBox(height: 5), Text('${dateRange[0]} ~ ${dateRange[1]}')],
+          ),
+          leading: const Icon(Icons.monetization_on_outlined, color: Colors.pink, size: 24.0),
+          onTap: () {
+            Provider.of<NavigationController>(context, listen: false).loadPeriod(period.id!);
 
-    setState(() {
-      _periods = result;
-      _loading = false;
-    });
+            Navigator.of(context)
+                .pushNamed(PeriodDetailsView.routeName)
+                .then((_) => _triggerReload());
+          },
+        );
+      },
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (_loading) return const Center(child: LoadingIcon());
+  Widget empty() {
+    return const Center(
+      child: Text("No periods yet!", style: TextStyle(fontSize: 20)),
+    );
+  }
 
+  Widget periodsListView(BuildContext context, AsyncSnapshot<List<Period>> snapshot) {
     Widget buttonRow = Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -59,7 +72,7 @@ class _PeriodListState extends State<PeriodsListView> {
                   false;
 
               if (shouldRefresh) {
-                _loadPeriodList();
+                _triggerReload();
               }
             },
             tooltip: 'Create new period',
@@ -68,6 +81,8 @@ class _PeriodListState extends State<PeriodsListView> {
         )
       ],
     );
+
+    List<Period> periods = snapshot.data!;
 
     return Scaffold(
       appBar: AppBar(
@@ -81,31 +96,28 @@ class _PeriodListState extends State<PeriodsListView> {
           ),
         ],
       ),
-      body: ListView.builder(
-        restorationId: 'PeriodsListView',
-        itemCount: _periods.length,
-        itemBuilder: (BuildContext context, int index) {
-          final period = _periods[index];
-
-          List<String> dateRange = DateUtil.formatDayRanges(period.dateFrom!, period.dateTo!);
-
-          return ListTile(
-            title: Text('${period.name}'),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [const SizedBox(height: 5), Text('${dateRange[0]} ~ ${dateRange[1]}')],
-            ),
-            leading: const Icon(Icons.monetization_on_outlined, color: Colors.pink, size: 24.0),
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                PeriodDetailsView.routeName,
-                arguments: {'id': period.id},
-              ).then((_) => _loadPeriodList());
-            },
-          );
-        },
-      ),
+      body: periods.isEmpty ? empty() : mainContent(periods),
       floatingActionButton: buttonRow,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: PeriodQueries.fetchAll(),
+      builder: (BuildContext context, AsyncSnapshot<List<Period>> snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+            return const Center(child: LoadingIcon());
+          default:
+            if (snapshot.hasError) {
+              return const Text("Error");
+            } else {
+              return periodsListView(context, snapshot);
+            }
+        }
+      },
     );
   }
 }

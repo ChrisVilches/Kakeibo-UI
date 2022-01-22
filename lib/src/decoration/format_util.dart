@@ -12,7 +12,8 @@ class FormatUtil {
 
   static String formatNumberCurrency(int? num) {
     if (num == null) return '';
-    return "${_currencySymbol.symbol}${formatNumberCommas(num)}";
+    String sign = num > 0 ? '' : '-';
+    return "$sign${_currencySymbol.symbol}${formatNumberCommas(num.abs())}";
   }
 
   /// Configure the currency formatter globally.

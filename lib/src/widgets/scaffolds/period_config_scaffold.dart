@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
 import 'package:kakeibo_ui/src/controllers/period_config_controller.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/decoration/form_validators.dart';
@@ -23,6 +24,7 @@ class PeriodConfigScaffold extends StatelessWidget {
           afterRemoveSuccess: (Period deletedPeriod) {
             SnackbarService.simpleSnackbar(context, "Removed: ${deletedPeriod.name}");
             Navigator.popUntil(context, ModalRoute.withName('/'));
+            Provider.of<NavigationController>(context, listen: false).clearData();
           },
         );
       },
@@ -64,7 +66,8 @@ class PeriodConfigScaffold extends StatelessWidget {
                   ? () async {
                       if (await ctrl.executePeriodUpdate()) {
                         SnackbarService.simpleSnackbar(context, "Updated period information.");
-                        Navigator.of(context).pop(true);
+                        Navigator.of(context).pop();
+                        Provider.of<NavigationController>(context, listen: false).reloadPeriod();
                       }
                     }
                   : null,
@@ -79,26 +82,31 @@ class PeriodConfigScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget removeButton = ElevatedButton.icon(
-      onPressed: () => _removePeriod(context),
-      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
-      icon: const Icon(Icons.delete),
-      label: const Text("Delete period"),
-    );
-
     final formWithState = ChangeNotifierProvider<PeriodConfigController>(
       create: (_) => PeriodConfigController(period),
       builder: (BuildContext context, _) => form(context),
     );
 
+    Widget buttonRow = Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: FloatingActionButton(
+            onPressed: () => _removePeriod(context),
+            backgroundColor: Theme.of(context).buttonTheme.colorScheme!.error,
+            foregroundColor: Colors.white,
+            tooltip: 'Delete period',
+            child: const Icon(Icons.delete),
+          ),
+        )
+      ],
+    );
+
     return Scaffold(
       appBar: AppBar(title: Text("${period.name} - Settings")),
-      body: Column(
-        children: [
-          formWithState,
-          removeButton,
-        ],
-      ),
+      body: formWithState,
+      floatingActionButton: buttonRow,
     );
   }
 }

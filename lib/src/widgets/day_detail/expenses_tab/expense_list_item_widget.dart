@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
 import 'package:kakeibo_ui/src/decoration/card_with_float_right_item_widget.dart';
 import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/models/expense.dart';
-import 'package:kakeibo_ui/src/models/extensions/expense_queries.dart';
 import 'package:kakeibo_ui/src/widgets/misc/signed_amount_widget.dart';
+import 'package:provider/provider.dart';
 
 class ExpenseListItemWidget extends StatelessWidget {
   final Expense expense;
-  final Function removeCallback;
-  final Function readdCallback;
+  final Function(Expense) undoCallback;
 
-  const ExpenseListItemWidget(this.expense,
-      {Key? key, required this.removeCallback, required this.readdCallback})
+  const ExpenseListItemWidget(this.expense, {Key? key, required this.undoCallback})
       : super(key: key);
 
   @override
@@ -31,12 +30,12 @@ class ExpenseListItemWidget extends StatelessWidget {
 
     return Dismissible(
       key: Key(expense.id.toString()),
-      onDismissed: (direction) {
-        removeCallback();
-        SnackbarService.snackbarWithAction(context, "Removed", "UNDO", readdCallback);
+      onDismissed: (direction) async {
+        debugPrint("Dismissed");
+        await Provider.of<NavigationController>(context, listen: false).removeExpense(expense);
+        SnackbarService.snackbarWithAction(context, "Removed", "UNDO", () => undoCallback(expense));
       },
       confirmDismiss: (DismissDirection direction) async {
-        await expense.destroy();
         return true;
       },
       child: listTile,

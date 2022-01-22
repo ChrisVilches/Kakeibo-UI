@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:kakeibo_ui/src/enums/token_removal_cause.dart';
 import 'package:kakeibo_ui/src/exceptions/incorrect_login_exception.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
@@ -39,17 +40,16 @@ class UserService {
     }
   }
 
+  void errorHandler(Response response) {}
+
   Future<void> logout() async {
     final endpoint = path.join(dotenv.env['API_URL']!, 'users', 'sign_out');
 
-    // TODO: Too verbose
-    http.delete(Uri.parse(endpoint), headers: getHeaders()).then((response) {
-      if (response.statusCode != 200) {
-        print("Some error happened when signing out");
-      }
-    }).catchError((error) {
-      print("Some error happened when signing out: $error");
-    });
+    http.Response response = await http.delete(Uri.parse(endpoint), headers: getHeaders());
+
+    if (response.statusCode != 200) {
+      throw Exception('Error while logging out.');
+    }
 
     /**
      * TODO:
