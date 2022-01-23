@@ -11,7 +11,7 @@ class ExpenseListContainerWidget extends StatelessWidget {
   const ExpenseListContainerWidget({Key? key}) : super(key: key);
 
   Future<void> _undoRemoveExpense(BuildContext context, Expense expense) async {
-    await expense.destroy(undo: true);
+    await expense.restore();
 
     try {
       await Provider.of<NavigationStore>(context, listen: false).reloadExpenses();
