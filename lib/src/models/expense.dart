@@ -1,9 +1,9 @@
 class Expense {
   final int id;
   final int cost;
-  final String? label;
+  final String label;
 
-  Expense({required this.id, required this.cost, this.label});
+  Expense({required this.id, required this.cost, this.label = ''});
 
   factory Expense.fromJson(Map<String, dynamic> json) {
     return Expense(

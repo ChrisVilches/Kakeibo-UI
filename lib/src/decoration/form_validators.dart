@@ -1,5 +1,7 @@
 typedef InputValidatorFn = String? Function(String?);
 
+final emailRegex = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+
 class FormValidators {
   static String? amountValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -25,9 +27,7 @@ class FormValidators {
   }
 
   static String? mustBeEmail(String? value) {
-    final regex = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    final bool emailValid = regex.hasMatch(value ?? '');
+    final bool emailValid = emailRegex.hasMatch(value ?? '');
 
     if (emailValid) return null;
 

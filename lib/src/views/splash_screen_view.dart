@@ -16,14 +16,13 @@ class _SplashScreenState extends State<SplashScreenView> {
   final splashDelay = 2;
 
   @override
-  void initState() {
+  initState() {
     super.initState();
-    _loadWidget();
-  }
 
-  _loadWidget() async {
-    var _duration = Duration(seconds: splashDelay);
-    return Timer(_duration, () async => {Navigator.pop(context)});
+    Timer(
+      Duration(seconds: splashDelay),
+      () async => {Navigator.pop(context)},
+    );
   }
 
   @override

@@ -6,6 +6,7 @@ import 'package:kakeibo_ui/src/models/expense.dart';
 import 'package:kakeibo_ui/src/widgets/misc/signed_amount_widget.dart';
 import 'package:provider/provider.dart';
 
+// TODO: Remove expense -> Go back in view history -> Press "undo" because snackbar is still there (error)
 class ExpenseListItemWidget extends StatelessWidget {
   final Expense expense;
   final Function(Expense) undoCallback;
@@ -15,10 +16,10 @@ class ExpenseListItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isEmpty = expense.label == null || expense.label!.isEmpty;
+    final bool isEmpty = expense.label.isEmpty;
     final fontStyle = isEmpty ? FontStyle.italic : FontStyle.normal;
     final title = Text(
-      isEmpty ? 'No label' : expense.label!,
+      isEmpty ? 'No label' : expense.label,
       style: TextStyle(fontStyle: fontStyle),
     );
 

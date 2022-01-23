@@ -7,12 +7,8 @@ class SettingsService {
   Future<ThemeMode> themeMode() async {
     String? themeValue = await serviceLocator.get<FlutterSecureStorage>().read(key: 'theme');
 
-    if (themeValue == 'dark') {
-      return ThemeMode.dark;
-    } else if (themeValue == 'light') {
-      return ThemeMode.light;
-    }
-
+    if (themeValue == 'dark') return ThemeMode.dark;
+    if (themeValue == 'light') return ThemeMode.light;
     return ThemeMode.system;
   }
 

@@ -26,7 +26,7 @@ class DayListItemWidget extends StatelessWidget {
     var icon = Icon(Icons.check_rounded,
         color: day.budget == null ? Colors.grey : Colors.green, size: 20.0);
 
-    List<Widget> columnChildren = [];
+    final columnChildren = <Widget>[];
     int totalExpense = day.totalExpense();
 
     if (day.budget == null) {
@@ -43,32 +43,31 @@ class DayListItemWidget extends StatelessWidget {
 
     if (totalExpense > 0) {
       columnChildren.add(const SizedBox(height: 5));
+
+      // TODO: Add icon Icon(Icons.receipt_long, size: 15, color: Colors.grey) to the left.
       columnChildren.add(
-        Row(
-          children: [
-            const Icon(Icons.receipt_long, size: 15, color: Colors.grey),
-            const SizedBox(width: 5),
-            Text('-' + FormatUtil.formatNumberCurrency(day.totalExpense()),
-                style: const TextStyle(color: Colors.grey))
-          ],
+        Text(
+          FormatUtil.formatNumberCurrency(-day.totalExpense()),
+          style: const TextStyle(color: Colors.grey),
         ),
       );
     }
 
     Widget card = CardWithFloatRightItemWidget(
-        icon: icon,
-        label: Column(
-          children: [
-            Text(DateUtil.formatDate(day.dayDate)),
-            const SizedBox(height: 5),
-            day.memo.isEmpty ? Container() : MemoWidget(day.memo),
-          ],
-          crossAxisAlignment: CrossAxisAlignment.start,
-        ),
-        rightWidget: Column(
-          children: columnChildren,
-          crossAxisAlignment: CrossAxisAlignment.end,
-        ));
+      icon: icon,
+      label: Column(
+        children: <Widget>[
+          Text(DateUtil.formatDate(day.dayDate)),
+          const SizedBox(height: 5),
+          day.memo.isEmpty ? Container() : MemoWidget(day.memo),
+        ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+      rightWidget: Column(
+        children: columnChildren,
+        mainAxisAlignment: MainAxisAlignment.center,
+      ),
+    );
 
     return InkWell(
       onTap: () async {

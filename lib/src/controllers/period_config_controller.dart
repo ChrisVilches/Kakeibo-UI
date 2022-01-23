@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/models/extensions/period_queries.dart';
 
+// TODO: Save period -> exit modal (automatically) -> go back to modal (data is not there)
+
 class PeriodConfigController with ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
 

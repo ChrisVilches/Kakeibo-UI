@@ -8,12 +8,25 @@ class MemoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [
-        const Icon(Icons.textsms_outlined, size: 15, color: Colors.grey),
-        const SizedBox(width: 5),
-        Text(_text,
-            style: const TextStyle(color: Colors.grey),
-            overflow: TextOverflow.ellipsis)
+      // TODO: What does this "min" do????
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        const SizedBox(
+          width: 0,
+          child: Icon(Icons.textsms_outlined, size: 15, color: Colors.grey),
+        ),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 25),
+            child: Text(
+              _text,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ),
+        ),
       ],
     );
   }

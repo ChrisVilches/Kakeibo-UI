@@ -105,7 +105,7 @@ class PeriodConfigScaffold extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text("${period.name} - Settings")),
-      body: formWithState,
+      body: SingleChildScrollView(child: formWithState),
       floatingActionButton: buttonRow,
     );
   }

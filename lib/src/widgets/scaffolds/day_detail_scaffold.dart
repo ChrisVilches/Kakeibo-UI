@@ -39,15 +39,18 @@ class DayDetailScaffold extends StatelessWidget {
           height: MediaQuery.of(context).size.height,
           child: TabBarView(
             children: [
-              PaddingTop(
-                child: Column(
-                  children: [
-                    const DayDetailSummaryWidget(),
-                    DayDetailFormWidget(period: period, day: day)
-                  ],
+              SingleChildScrollView(
+                child: PaddingTop(
+                  child: Column(
+                    children: [
+                      const DayDetailSummaryWidget(),
+                      DayDetailFormWidget(period: period, day: day)
+                    ],
+                  ),
                 ),
               ),
-              const ExpensesManagementWidget(),
+              // TODO: Scrollable part should be the list only, but it's OK this way (decent).
+              const SingleChildScrollView(child: ExpensesManagementWidget()),
             ],
           ),
         ),

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
 import 'package:kakeibo_ui/src/models/day_data.dart';
@@ -55,7 +56,7 @@ class NavigationController with ChangeNotifier {
 
   Future<void> undoRemoveExpense(Expense expense) async {
     await expense.destroy(undo: true);
-    await reloadExpenses();
+    await reloadPeriod();
   }
 
   void calculateDayData() {
@@ -68,7 +69,7 @@ class NavigationController with ChangeNotifier {
     calculateAll();
   }
 
-  void loadPeriod(int periodId) async {
+  Future<void> loadPeriod(int periodId) async {
     if (_currentPeriod?.id != periodId) {
       _currentPeriod = null;
     }
@@ -76,18 +77,27 @@ class NavigationController with ChangeNotifier {
     _loading = true;
     notifyListeners();
 
+    print("Fetching one period (graphql)");
     _currentPeriod = await PeriodQueries.fetchOne(periodId);
+    _updateCurrentDayFromCurrentPeriod();
 
     _loading = false;
     calculateAll();
   }
 
-  void reloadPeriod() async {
+  void _updateCurrentDayFromCurrentPeriod() {
+    if (_currentDay == null) return;
+
+    _currentDay =
+        _currentPeriod!.fullDays.firstWhereOrNull((Day day) => day.dayDate == _currentDay!.dayDate);
+  }
+
+  Future<void> reloadPeriod() async {
     if (_currentPeriod == null) {
       throw Exception("Cannot reload period because it has not been loaded yet");
     }
 
-    loadPeriod(_currentPeriod!.id!);
+    await loadPeriod(_currentPeriod!.id!);
   }
 
   void calculateAll() {
@@ -95,19 +105,9 @@ class NavigationController with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> reloadExpenses() async {
-    // TODO: This implementation is very inefficient. Ideally the expenses are fetched individually
-    //       from a specific query that fetches expenses.
-    Period period = await PeriodQueries.fetchOne(_currentPeriod!.id!);
-    Day day = period.fullDays.firstWhere((d) => d.dayDate == _currentDay!.dayDate);
-
-    _currentDay = day;
-    calculateAll();
-  }
-
   void setCurrentDay(Day? day) {
     _currentDay = day;
-    calculateAll();
+    notifyListeners();
   }
 
   void clearData() {

@@ -27,6 +27,11 @@ class Period {
     fullDays = _getFullDays();
   }
 
+  bool fullyConfigured() {
+    bool emptyOrZero(int? num) => (num ?? 0) == 0;
+    return !emptyOrZero(salary) && !emptyOrZero(initialMoney) && !emptyOrZero(dailyExpenses);
+  }
+
   int useable() {
     double result = (salary! * (100 - savingsPercentage!)) / 100.0;
     return result.round();

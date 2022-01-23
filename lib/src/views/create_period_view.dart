@@ -11,7 +11,6 @@ class CreatePeriodView extends StatelessWidget {
   const CreatePeriodView({Key? key}) : super(key: key);
 
   Widget form(BuildContext context) {
-    // TODO: Shouldn't this be a field? It's creating a controller everytime a widget is being created.
     CreatePeriodController ctrl = Provider.of<CreatePeriodController>(context);
 
     return Scaffold(
@@ -66,7 +65,7 @@ class CreatePeriodView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return ChangeNotifierProvider<CreatePeriodController>(
       create: (context) => CreatePeriodController(),
       builder: (context, _) => form(context),
     );

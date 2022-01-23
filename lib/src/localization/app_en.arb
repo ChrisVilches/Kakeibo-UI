@@ -1,6 +1,6 @@
 {
-  "appTitle": "kakeibo_ui",
+  "appTitle": "Kakeibo",
   "@appTitle": {
-    "description": "The title of the application"
+    "description": "Simple money management app"
   }
 }
