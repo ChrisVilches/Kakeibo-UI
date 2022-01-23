@@ -24,7 +24,7 @@ class UserService {
   }
 
   Future<void> login(String email, String password) async {
-    final endpoint = path.join(dotenv.env['API_URL']!, 'users', 'sign_in');
+    final String endpoint = path.join(dotenv.env['API_URL']!, 'users', 'sign_in');
 
     final response = await http.post(Uri.parse(endpoint),
         headers: getHeaders(),

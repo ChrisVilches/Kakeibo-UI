@@ -4,6 +4,7 @@ import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/decoration/form_validators.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
 import 'package:kakeibo_ui/src/exceptions/incorrect_login_exception.dart';
+import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/widgets/misc/app_logo_widget.dart';
 import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/views/home_view.dart';
@@ -17,11 +18,11 @@ class LoginView extends StatelessWidget {
   void _submitForm(BuildContext context) async {
     try {
       if (await Provider.of<LoginController>(context, listen: false).submitForm()) {
-        SnackbarService.simpleSnackbar(context, "You logged in successfully!");
+        serviceLocator.get<SnackbarService>().simpleSnackbar("You logged in successfully!");
         Navigator.of(context).pushReplacementNamed(HomeView.routeName);
       }
     } on IncorrectLoginException catch (e) {
-      SnackbarService.simpleSnackbar(context, e.toString());
+      serviceLocator.get<SnackbarService>().simpleSnackbar(e.toString());
     }
   }
 

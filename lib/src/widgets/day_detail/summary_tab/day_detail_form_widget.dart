@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/controllers/day_detail_form_controller.dart';
 import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
+import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
 import 'package:kakeibo_ui/src/widgets/misc/digits_only_input_widget.dart';
@@ -18,7 +19,7 @@ class DayDetailFormWidget extends StatelessWidget {
   void _submitForm(BuildContext context) async {
     if (await Provider.of<DayDetailFormController>(context, listen: false).submitForm()) {
       Provider.of<NavigationStore>(context, listen: false).reloadPeriod();
-      SnackbarService.simpleSnackbar(context, 'Updated');
+      serviceLocator.get<SnackbarService>().simpleSnackbar('Updated');
     }
   }
 

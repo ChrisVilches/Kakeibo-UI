@@ -5,11 +5,11 @@ import 'package:kakeibo_ui/src/models/period.dart';
 /// Logic for generating the full table (all data necessary for graphs and other views).
 class TableCalculator {
   static List<DayData> obtainData(Period period) {
-    List<int?> remaining = _getRemaining(period);
-    List<int> dayExpenses = _getExpenses(period);
-    List<int> burndown = _getBurndown(period);
-    List<int?> projections = _getProjections(period, remaining, dayExpenses);
-    List<int?> diff = _getDiff(period, remaining, burndown);
+    final List<int?> remaining = _getRemaining(period);
+    final List<int> dayExpenses = _getExpenses(period);
+    final List<int> burndown = _getBurndown(period);
+    final List<int?> projections = _getProjections(period, remaining, dayExpenses);
+    final List<int?> diff = _getDiff(period, remaining, burndown);
 
     List<DayData> data = [];
 

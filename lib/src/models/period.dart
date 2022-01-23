@@ -33,7 +33,7 @@ class Period {
   }
 
   int useable() {
-    double result = (salary! * (100 - savingsPercentage!)) / 100.0;
+    final double result = (salary! * (100 - savingsPercentage!)) / 100.0;
     return result.round();
   }
 
@@ -46,11 +46,11 @@ class Period {
   }
 
   List<Day> _getFullDays() {
-    if (dateFrom == null || dateTo == null) return [];
+    if (dateFrom == null || dateTo == null) return <Day>[];
 
     DateTime date = dateFrom!;
 
-    List<Day> result = [];
+    final List<Day> result = <Day>[];
 
     int i = 0;
 

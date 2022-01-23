@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/card_with_float_right_item_widget.dart';
+import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/models/expense.dart';
 import 'package:kakeibo_ui/src/models/extensions/expense_queries.dart';
@@ -48,7 +49,9 @@ class ExpenseListItemWidget extends StatelessWidget {
       onDismissed: (direction) async {
         debugPrint("Dismissed");
         await _removeExpense(context, expense);
-        SnackbarService.snackbarWithAction(context, "Removed", "UNDO", () => undoCallback(expense));
+        serviceLocator
+            .get<SnackbarService>()
+            .snackbarWithAction("Removed", "UNDO", () => undoCallback(expense));
       },
       confirmDismiss: (DismissDirection direction) async {
         return true;

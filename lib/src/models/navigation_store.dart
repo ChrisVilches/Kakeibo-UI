@@ -67,7 +67,7 @@ class NavigationStore with ChangeNotifier {
     _loading = true;
     notifyListeners();
 
-    print("Fetching one period (graphql)");
+    debugPrint("Fetching one period (graphql)");
     _currentPeriod = await PeriodQueries.fetchOne(periodId);
     _updateCurrentDayFromCurrentPeriod();
 

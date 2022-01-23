@@ -3,6 +3,7 @@ import 'package:kakeibo_ui/src/controllers/expenses_management_controller.dart';
 import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
+import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/widgets/misc/digits_only_input_widget.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +32,7 @@ class ExpenseCreationFormWidget extends StatelessWidget {
           period: nav.currentPeriod!,
           day: nav.currentDay!,
         )) {
-          SnackbarService.simpleSnackbar(context, "Created");
+          serviceLocator.get<SnackbarService>().simpleSnackbar("Created");
 
           nav.reloadPeriod();
           expensesCtrl.resetForm();

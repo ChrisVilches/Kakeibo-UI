@@ -53,7 +53,7 @@ class _PeriodDetailsState extends State<PeriodDetailsView> {
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return PeriodConfigScaffold(period: _period!);
+          return const PeriodConfigScaffold();
         },
         fullscreenDialog: true,
       ),

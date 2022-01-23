@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:kakeibo_ui/src/exceptions/http_request_exception.dart';
 import 'package:kakeibo_ui/src/exceptions/not_logged_in_exception.dart';
 import 'package:kakeibo_ui/src/exceptions/signature_expired_exception.dart';
+import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 
 /// This class is a substitute for the error handling mechanism provided by 'runZonedGuarded'.
@@ -24,8 +25,6 @@ class GlobalErrorHandlerService {
   void _handleException(Exception err) {
     if (_navigatorKey.currentContext == null) return;
 
-    BuildContext context = _navigatorKey.currentContext!;
-
     debugPrint(
         "(global_error_handler_service.dart) Exception caught in '_handleException'. Message: ${err.toString()}, type: ${err.runtimeType}");
 
@@ -36,13 +35,13 @@ class GlobalErrorHandlerService {
     //       where the snackbar must be either displayed or not displayed).
     switch (err.runtimeType) {
       case HttpRequestException:
-        SnackbarService.simpleSnackbar(context, err.toString());
+        serviceLocator.get<SnackbarService>().simpleSnackbar(err.toString());
         break;
       case NotLoggedInException:
-        SnackbarService.simpleSnackbar(context, err.toString());
+        serviceLocator.get<SnackbarService>().simpleSnackbar(err.toString());
         break;
       case SignatureExpiredException:
-        SnackbarService.simpleSnackbar(context, err.toString());
+        serviceLocator.get<SnackbarService>().simpleSnackbar(err.toString());
     }
   }
 }

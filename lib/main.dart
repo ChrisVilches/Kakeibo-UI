@@ -34,7 +34,7 @@ Future<void> main() async {
         "(main.dart) onTokenRemoved executed. Snackbar message: ${cause.message}. Trigger snackbar: $triggerSnackbar");
 
     if (triggerSnackbar) {
-      SnackbarService.simpleSnackbar(navigatorKey.currentContext!, cause.message);
+      serviceLocator.get<SnackbarService>().simpleSnackbar(cause.message);
     }
 
     Navigator.of(navigatorKey.currentContext!).pushReplacementNamed(LoginView.routeName);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/controllers/create_period_controller.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
+import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -47,7 +48,7 @@ class CreatePeriodView extends StatelessWidget {
                       ? null
                       : () async {
                           if (await ctrl.executeCreatePeriod()) {
-                            SnackbarService.simpleSnackbar(context, "Created");
+                            serviceLocator.get<SnackbarService>().simpleSnackbar("Created");
                             Navigator.of(context).pop(true);
                           }
                         },

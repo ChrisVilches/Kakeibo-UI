@@ -2,10 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/models/extensions/period_queries.dart';
 
-// TODO: Save period -> exit modal (automatically) -> go back to modal (data is not there)
-
 class PeriodConfigController with ChangeNotifier {
-  final _formKey = GlobalKey<FormState>();
+  PeriodConfigController(this.period);
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final Period period;
   late String _salaryValue = period.salary.toString();
@@ -24,8 +24,6 @@ class PeriodConfigController with ChangeNotifier {
   bool get submitting => _submitting;
   GlobalKey<FormState> get formKey => _formKey;
 
-  PeriodConfigController(this.period);
-
   bool canSubmitForm() {
     if (!_formChanged) return false;
     if (_submitting) return false;
@@ -37,27 +35,27 @@ class PeriodConfigController with ChangeNotifier {
     notifyListeners();
   }
 
-  void onChangedName(text) {
+  void onChangedName(String? text) {
     _nameValue = text ?? '';
     formChanged();
   }
 
-  void onChangedSalary(text) {
+  void onChangedSalary(String? text) {
     _salaryValue = text ?? '';
     formChanged();
   }
 
-  void onChangedInitialMoney(text) {
+  void onChangedInitialMoney(String? text) {
     _initialMoneyValue = text ?? '';
     formChanged();
   }
 
-  void onChangedSavingsPercentage(text) {
+  void onChangedSavingsPercentage(String? text) {
     _savingsPercentageValue = text ?? '';
     formChanged();
   }
 
-  void onChangedDailyExpenses(text) {
+  void onChangedDailyExpenses(String? text) {
     _dailyExpensesValue = text ?? '';
     formChanged();
   }
