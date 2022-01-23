@@ -5,7 +5,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 class CreatePeriodController with ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
   bool _loading = false;
-  String _selectedName = "";
+  String _selectedName = '';
   DateTime _selectedStartDate = DateTime.now();
   DateTime _selectedEndDate = DateTime.now().add(const Duration(days: 31));
 
@@ -17,14 +17,14 @@ class CreatePeriodController with ChangeNotifier {
 
   CreatePeriodController();
 
-  void onNameChanged(text) {
+  void onNameChanged(String text) {
     _selectedName = text;
     notifyListeners();
   }
 
   void onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
-    _selectedStartDate = args.value.startDate;
-    _selectedEndDate = args.value.endDate;
+    _selectedStartDate = args.value.startDate as DateTime;
+    _selectedEndDate = args.value.endDate as DateTime;
     notifyListeners();
   }
 

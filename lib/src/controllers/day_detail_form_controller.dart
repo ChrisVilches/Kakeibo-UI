@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
-import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/models/extensions/period_queries.dart';
+import 'package:kakeibo_ui/src/models/period.dart';
 
 class DayDetailFormController with ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
-  String _selectedBudget = "";
-  String _selectedMemo = "";
+  String _selectedBudget = '';
+  String _selectedMemo = '';
   final Period period;
   final Day day;
 
@@ -18,7 +18,7 @@ class DayDetailFormController with ChangeNotifier {
   String get selectedMemo => _selectedMemo;
 
   DayDetailFormController({required this.period, required this.day}) {
-    _selectedBudget = day.budget == null ? "" : day.budget.toString();
+    _selectedBudget = day.budget == null ? '' : day.budget.toString();
     _selectedMemo = day.memo;
   }
 
@@ -53,7 +53,7 @@ class DayDetailFormController with ChangeNotifier {
         Day(
             dayDate: day.dayDate,
             memo: selectedMemo,
-            budget: selectedBudget == "" ? null : int.parse(selectedBudget)),
+            budget: selectedBudget == '' ? null : int.parse(selectedBudget)),
       );
     } on Exception {
       rethrow;

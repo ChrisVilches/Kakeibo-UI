@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/models/day_data.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
@@ -12,7 +12,7 @@ class PeriodChartScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: const Text("Chart")), body: _BarChartWidget(_period));
+    return Scaffold(appBar: AppBar(title: const Text('Chart')), body: _BarChartWidget(_period));
   }
 }
 

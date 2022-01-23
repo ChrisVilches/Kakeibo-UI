@@ -8,7 +8,7 @@ extension CurrencySymbolExtension on CurrencySymbol {
       case CurrencySymbol.euro:
         return '€';
       default:
-        return "\$";
+        return '\$';
     }
   }
 }

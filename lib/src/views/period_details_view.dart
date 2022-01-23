@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/widgets/day_list_item_widget.dart';
 import 'package:kakeibo_ui/src/widgets/period_detail/configure_reminder_dialog_widget.dart';
@@ -21,7 +21,7 @@ class _PeriodDetailsState extends State<PeriodDetailsView> {
   Period? _period;
 
   void _showReminderConfig(BuildContext context) {
-    showDialog(
+    showDialog<ConfigureReminderDialogWidget>(
       context: context,
       builder: (BuildContext context) {
         return ConfigureReminderDialogWidget(onPressOk: () => _openConfigWidgetModal(context));
@@ -68,7 +68,7 @@ class _PeriodDetailsState extends State<PeriodDetailsView> {
 
     Period period = Provider.of<NavigationStore>(context).currentPeriod!;
 
-    debugPrint("Period detail (ID: ${period.id})");
+    debugPrint('Period detail (ID: ${period.id})');
 
     Widget dayList = ListView.builder(
       restorationId: 'PeriodDetailsView_DayList',
@@ -76,7 +76,7 @@ class _PeriodDetailsState extends State<PeriodDetailsView> {
       itemBuilder: (BuildContext context, int index) => DayListItemWidget(
         day: Provider.of<NavigationStore>(context).currentPeriod!.fullDays[index],
         dayDetailModalClosedCallback: () {
-          debugPrint("Refreshing period detail...");
+          debugPrint('Refreshing period detail...');
           Provider.of<NavigationStore>(context, listen: false).reloadPeriod();
         },
       ),
@@ -93,7 +93,7 @@ class _PeriodDetailsState extends State<PeriodDetailsView> {
           IconButton(
             icon: const Icon(Icons.bar_chart),
             onPressed: () {
-              Navigator.push(
+              Navigator.push<MaterialPageRoute<dynamic>>(
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) => PeriodChartScaffold(period),

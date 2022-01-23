@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/views/period_details_view.dart';
 import 'package:provider/provider.dart';

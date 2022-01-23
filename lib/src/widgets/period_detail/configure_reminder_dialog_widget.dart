@@ -8,7 +8,7 @@ class ConfigureReminderDialogWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget okButton = TextButton(
-      child: const Text("Configure"),
+      child: const Text('Configure'),
       onPressed: () {
         // Remove alert first.
         Navigator.of(context).pop();
@@ -17,7 +17,7 @@ class ConfigureReminderDialogWidget extends StatelessWidget {
     );
 
     Widget cancelButton = TextButton(
-      child: const Text("Cancel"),
+      child: const Text('Cancel'),
       style: ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.grey)),
       onPressed: () {
         Navigator.of(context).pop();
@@ -25,8 +25,8 @@ class ConfigureReminderDialogWidget extends StatelessWidget {
     );
 
     return AlertDialog(
-      title: const Text("Please configure this period correctly"),
-      content: const Text("It seems this period is missing some configurations. Configure now?"),
+      title: const Text('Please configure this period correctly'),
+      content: const Text('It seems this period is missing some configurations. Configure now?'),
       actions: [cancelButton, okButton],
     );
   }

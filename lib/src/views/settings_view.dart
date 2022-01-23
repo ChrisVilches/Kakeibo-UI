@@ -42,7 +42,7 @@ class SettingsView extends StatelessWidget {
     Widget logoutButton = ElevatedButton(
       style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
       onPressed: controller.logout,
-      child: const Text("Logout"),
+      child: const Text('Logout'),
     );
 
     return Scaffold(

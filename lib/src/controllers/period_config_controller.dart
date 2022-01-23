@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/models/extensions/period_queries.dart';
+import 'package:kakeibo_ui/src/models/period.dart';
 
 class PeriodConfigController with ChangeNotifier {
   PeriodConfigController(this.period);

@@ -14,7 +14,7 @@ class DateUtil {
   }
 
   static DateTime parseDate(String date) {
-    DateFormat format = DateFormat("yyyy-MM-dd");
+    DateFormat format = DateFormat('yyyy-MM-dd');
     return format.parse(date);
   }
 

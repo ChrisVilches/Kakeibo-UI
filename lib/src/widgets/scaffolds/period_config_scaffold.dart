@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/controllers/period_config_controller.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/decoration/form_validators.dart';
+import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
+import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/services/snackbar_service.dart';
-import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
-import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/widgets/misc/digits_only_input_widget.dart';
 import 'package:kakeibo_ui/src/widgets/period_config/period_remove_confirm_widget.dart';
 import 'package:provider/provider.dart';
@@ -15,13 +15,13 @@ class PeriodConfigScaffold extends StatelessWidget {
   const PeriodConfigScaffold({Key? key}) : super(key: key);
 
   void _removePeriod(BuildContext context, Period period) {
-    showDialog(
+    showDialog<PeriodRemoveConfirmWidget>(
       context: context,
       builder: (BuildContext context) {
         return PeriodRemoveConfirmWidget(
           period: period,
           afterRemoveSuccess: (Period deletedPeriod) {
-            serviceLocator.get<SnackbarService>().simpleSnackbar("Removed: ${deletedPeriod.name}");
+            serviceLocator.get<SnackbarService>().simpleSnackbar('Removed: ${deletedPeriod.name}');
             Navigator.popUntil(context, ModalRoute.withName('/'));
             Provider.of<NavigationStore>(context, listen: false).clearData();
           },
@@ -45,7 +45,7 @@ class PeriodConfigScaffold extends StatelessWidget {
                     onChanged: ctrl.onChangedName,
                     initialValue: ctrl.nameValue,
                     validator: FormValidators.requiredField,
-                    decoration: const InputDecoration(labelText: "Name"),
+                    decoration: const InputDecoration(labelText: 'Name'),
                   ),
                   DigitsOnlyInputWidget(
                     "This month's salary",
@@ -53,17 +53,17 @@ class PeriodConfigScaffold extends StatelessWidget {
                     initialValue: ctrl.salaryValue,
                   ),
                   DigitsOnlyInputWidget(
-                    "Initial money",
+                    'Initial money',
                     onChanged: ctrl.onChangedInitialMoney,
                     initialValue: ctrl.initialMoneyValue,
                   ),
                   DigitsOnlyInputWidget(
-                    "Savings Percentage (%)",
+                    'Savings Percentage (%)',
                     onChanged: ctrl.onChangedSavingsPercentage,
                     initialValue: ctrl.savingsPercentageValue,
                   ),
                   DigitsOnlyInputWidget(
-                    "Daily Expenses",
+                    'Daily Expenses',
                     onChanged: ctrl.onChangedDailyExpenses,
                     initialValue: ctrl.dailyExpensesValue,
                   ),
@@ -76,7 +76,7 @@ class PeriodConfigScaffold extends StatelessWidget {
                       if (await ctrl.executePeriodUpdate()) {
                         serviceLocator
                             .get<SnackbarService>()
-                            .simpleSnackbar("Updated period information.");
+                            .simpleSnackbar('Updated period information.');
                         Navigator.of(context).pop();
                         Provider.of<NavigationStore>(context, listen: false).reloadPeriod();
                       }
@@ -117,7 +117,7 @@ class PeriodConfigScaffold extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(title: Text("${period.name} - Settings")),
+      appBar: AppBar(title: Text('${period.name} - Settings')),
       body: SingleChildScrollView(child: formWithState),
       floatingActionButton: buttonRow,
     );

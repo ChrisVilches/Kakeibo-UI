@@ -5,8 +5,8 @@ import 'package:kakeibo_ui/src/services/user_service.dart';
 
 class LoginController with ChangeNotifier {
   final _formKey = GlobalKey<FormState>();
-  String _emailValue = "";
-  String _passwordValue = "";
+  String _emailValue = '';
+  String _passwordValue = '';
   bool _obscureText = true;
   bool _loading = false;
 
@@ -14,12 +14,12 @@ class LoginController with ChangeNotifier {
   bool get obscureText => _obscureText;
   GlobalKey<FormState> get formKey => _formKey;
 
-  void onChangeEmail(text) {
+  void onChangeEmail(String text) {
     _emailValue = text;
     notifyListeners();
   }
 
-  void onChangePassword(text) {
+  void onChangePassword(String text) {
     _passwordValue = text;
     notifyListeners();
   }

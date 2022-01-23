@@ -6,7 +6,7 @@ class EmptyPeriodsListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text("No periods yet!", style: TextStyle(fontSize: 20)),
+      child: Text('No periods yet!', style: TextStyle(fontSize: 20)),
     );
   }
 }

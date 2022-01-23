@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/models/expense.dart';
 import 'package:kakeibo_ui/src/models/extensions/expense_queries.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/widgets/day_detail/expenses_tab/expense_list_item_widget.dart';
@@ -16,9 +16,9 @@ class ExpenseListContainerWidget extends StatelessWidget {
     try {
       await Provider.of<NavigationStore>(context, listen: false).reloadExpenses();
     } catch (e) {
-      debugPrint("""Expense was restored, however the period data could not be reloaded,
+      debugPrint('''Expense was restored, however the period data could not be reloaded,
 due to issue with context (this happens when the UNDO button is clicked
-outside the expense management screen). Exception message: $e""");
+outside the expense management screen). Exception message: $e''');
     }
   }
 
@@ -26,7 +26,7 @@ outside the expense management screen). Exception message: $e""");
         expense,
         undoCallback: (expense) async {
           _undoRemoveExpense(context, expense);
-          serviceLocator.get<SnackbarService>().simpleSnackbar("Restored expense");
+          serviceLocator.get<SnackbarService>().simpleSnackbar('Restored expense');
         },
       );
 

@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:kakeibo_ui/src/enums/token_removal_cause.dart';
 import 'package:kakeibo_ui/src/exceptions/incorrect_login_exception.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:path/path.dart' as path;
-import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserService {
   String? _token;
-  Function(TokenRemovalCause, bool)? onTokenRemoved;
+  void Function(TokenRemovalCause, bool)? onTokenRemoved;
 
   String? get token {
     return _token;

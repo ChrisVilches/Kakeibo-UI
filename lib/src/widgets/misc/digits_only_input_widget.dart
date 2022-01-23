@@ -6,7 +6,7 @@ class DigitsOnlyInputWidget extends StatelessWidget {
   final String _label;
   final String? initialValue;
   final bool required;
-  final Function(String?) onChanged;
+  final void Function(String?) onChanged;
 
   const DigitsOnlyInputWidget(this._label,
       {Key? key, this.required = true, required this.onChanged, this.initialValue})

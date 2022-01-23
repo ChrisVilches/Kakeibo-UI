@@ -48,12 +48,12 @@ class CreatePeriodView extends StatelessWidget {
                       ? null
                       : () async {
                           if (await ctrl.executeCreatePeriod()) {
-                            serviceLocator.get<SnackbarService>().simpleSnackbar("Created");
+                            serviceLocator.get<SnackbarService>().simpleSnackbar('Created');
                             Navigator.of(context).pop(true);
                           }
                         },
                   icon: const Icon(Icons.add),
-                  label: const Text("Create"),
+                  label: const Text('Create'),
                 ),
                 ctrl.loading ? const LoadingIcon() : Container()
               ],

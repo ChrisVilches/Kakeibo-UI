@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/decoration/loading_icon_widget.dart';
-import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/models/extensions/period_queries.dart';
+import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/views/create_period_view.dart';
 import 'package:kakeibo_ui/src/views/settings_view.dart';
 import 'package:kakeibo_ui/src/widgets/periods_list/empty_periods_list_widget.dart';
@@ -17,7 +17,7 @@ class PeriodsListView extends StatefulWidget {
 
 class _PeriodListState extends State<PeriodsListView> with SingleTickerProviderStateMixin {
   void _triggerReload() {
-    debugPrint("Reloading periods list...");
+    debugPrint('Reloading periods list...');
     setState(() {});
   }
 
@@ -32,7 +32,8 @@ class _PeriodListState extends State<PeriodsListView> with SingleTickerProviderS
             return const Center(child: LoadingIcon());
           default:
             if (snapshot.hasError) {
-              return const Text("Error");
+              debugPrint(snapshot.error.toString());
+              return const Text('Error');
             } else {
               return _PeriodList(snapshot: snapshot, triggerReload: _triggerReload);
             }

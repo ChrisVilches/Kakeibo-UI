@@ -14,7 +14,7 @@ class SignedAmountWidget extends StatelessWidget {
     String sign = value! >= 0 ? '+' : '-';
 
     return Text(
-      "$sign${FormatUtil.formatNumberCurrency(value!.abs())}",
+      '$sign${FormatUtil.formatNumberCurrency(value!.abs())}',
       style: TextStyle(color: color, fontWeight: FontWeight.bold),
     );
   }

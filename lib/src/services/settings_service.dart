@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:kakeibo_ui/src/services/locator.dart';
 import 'package:kakeibo_ui/src/enums/currency_symbol.dart';
+import 'package:kakeibo_ui/src/services/locator.dart';
 
 class SettingsService {
   Future<ThemeMode> themeMode() async {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/card_with_float_right_item_widget.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/decoration/format_util.dart';
-import 'package:kakeibo_ui/src/models/day_data.dart';
-import 'package:kakeibo_ui/src/widgets/misc/projection_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
+import 'package:kakeibo_ui/src/models/day_data.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/widgets/misc/memo_widget.dart';
+import 'package:kakeibo_ui/src/widgets/misc/projection_widget.dart';
 import 'package:kakeibo_ui/src/widgets/misc/signed_amount_widget.dart';
 import 'package:kakeibo_ui/src/widgets/scaffolds/day_detail_scaffold.dart';
 import 'package:provider/provider.dart';
@@ -78,7 +78,7 @@ class DayListItemWidget extends StatelessWidget {
 
         Navigator.of(context)
             .push(
-              MaterialPageRoute(
+              MaterialPageRoute<DayDetailScaffold>(
                 builder: (_) {
                   return const DayDetailScaffold();
                 },

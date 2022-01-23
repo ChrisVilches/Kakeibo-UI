@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/decoration/padding_top_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/widgets/day_detail/expenses_tab/expenses_management_widget.dart';
 import 'package:kakeibo_ui/src/widgets/day_detail/summary_tab/day_detail_form_widget.dart';
@@ -17,7 +17,7 @@ class DayDetailScaffold extends StatelessWidget {
     Period period = Provider.of<NavigationStore>(context).currentPeriod!;
     Day day = Provider.of<NavigationStore>(context).currentDay!;
 
-    final String title = "${period.name} - ${DateUtil.formatDateSlash(day.dayDate)}";
+    final String title = '${period.name} - ${DateUtil.formatDateSlash(day.dayDate)}';
 
     return DefaultTabController(
       length: 2,
@@ -26,11 +26,11 @@ class DayDetailScaffold extends StatelessWidget {
           title: Text(title),
           bottom: const TabBar(tabs: [
             Tab(
-              text: "Summary",
+              text: 'Summary',
               icon: Icon(Icons.summarize),
             ),
             Tab(
-              text: "Expenses",
+              text: 'Expenses',
               icon: Icon(Icons.receipt_long),
             ),
           ]),

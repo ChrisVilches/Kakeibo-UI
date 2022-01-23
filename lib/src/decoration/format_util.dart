@@ -14,7 +14,7 @@ class FormatUtil {
   static String formatNumberCurrency(int? num) {
     if (num == null) return '';
     String sign = num > 0 ? '' : '-';
-    return "$sign${_currencySymbol.symbol}${formatNumberCommas(num.abs())}";
+    return '$sign${_currencySymbol.symbol}${formatNumberCommas(num.abs())}';
   }
 
   /// Configure the currency formatter globally.
@@ -33,6 +33,6 @@ class FormatUtil {
 
     final lastNonBlank = result.lastIndexWhere((text) => text.isNotEmpty);
 
-    return result.sublist(0, lastNonBlank + 1).join("\n");
+    return result.sublist(0, lastNonBlank + 1).join('\n');
   }
 }
