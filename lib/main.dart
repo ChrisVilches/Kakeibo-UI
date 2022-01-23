@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/enums/token_removal_cause.dart';
 import 'package:kakeibo_ui/src/services/gql_client.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
+import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/services/user_service.dart';
 import 'package:kakeibo_ui/src/views/login_view.dart';
 import 'src/app.dart';
@@ -13,7 +13,7 @@ import 'src/controllers/settings_controller.dart';
 import 'src/services/settings_service.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: kReleaseMode ? ".env.production" : ".env.development");
+  await dotenv.load(fileName: kReleaseMode ? '.env.production' : '.env.development');
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   setUpLocator(navigatorKey);
@@ -31,7 +31,7 @@ Future<void> main() async {
   serviceLocator.get<UserService>().onTokenRemoved =
       (TokenRemovalCause cause, bool triggerSnackbar) async {
     debugPrint(
-        "(main.dart) onTokenRemoved executed. Snackbar message: ${cause.message}. Trigger snackbar: $triggerSnackbar");
+        '(main.dart) onTokenRemoved executed. Snackbar message: ${cause.message}. Trigger snackbar: $triggerSnackbar');
 
     if (triggerSnackbar) {
       serviceLocator.get<SnackbarService>().simpleSnackbar(cause.message);

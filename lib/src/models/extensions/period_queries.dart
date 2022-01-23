@@ -1,14 +1,14 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
-import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
+import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/services/gql_client.dart';
 import 'package:kakeibo_ui/src/services/locator.dart';
 
 extension PeriodQueries on Period {
   static Future<List<Period>> fetchAll() async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
-      """
+      '''
       {
         fetchPeriods {
           id
@@ -16,15 +16,15 @@ extension PeriodQueries on Period {
           dateFrom
           dateTo
         }
-      }""",
+      }''',
     );
 
-    return Period.fromJsonList(result.data!['fetchPeriods']);
+    return Period.fromJsonList(result.data!['fetchPeriods'] as List);
   }
 
   static Future<Period> fetchOne(int id) async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
-      """
+      '''
       query(\$id: ID!) {
         fetchOnePeriod(id: \$id) {
           id
@@ -47,7 +47,7 @@ extension PeriodQueries on Period {
             }
           }
         }
-      }""",
+      }''',
       variables: {'id': id},
     );
 
@@ -56,7 +56,7 @@ extension PeriodQueries on Period {
 
   static Future<Period> create(String name, DateTime dateFrom, DateTime dateTo) async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
-      """
+      '''
       mutation(\$input: PeriodsCreateInput!) {
         createPeriod(input: \$input) {
           id
@@ -64,7 +64,7 @@ extension PeriodQueries on Period {
           dateTo
           dateFrom
         }
-      }""",
+      }''',
       variables: {
         'input': {
           'name': name,
@@ -79,7 +79,7 @@ extension PeriodQueries on Period {
 
   static Future<Period> update(Period period) async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
-      """
+      '''
       mutation(\$input: PeriodsUpdateInput!) {
         updatePeriod(input: \$input) {
           id
@@ -87,7 +87,7 @@ extension PeriodQueries on Period {
           dateTo
           dateFrom
         }
-      }""",
+      }''',
       variables: {'input': period.toJson()},
     );
 
@@ -96,7 +96,7 @@ extension PeriodQueries on Period {
 
   Future<Day> upsertDay(Day day) async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
-      """
+      '''
       mutation(\$input: DaysUpsertInput!) {
         upsertDay(input: \$input) {
           id
@@ -105,7 +105,7 @@ extension PeriodQueries on Period {
           dayDate
         }
       }
-    """,
+    ''',
       variables: {
         'input': {
           'budget': day.budget,
@@ -121,7 +121,7 @@ extension PeriodQueries on Period {
 
   Future<Period> destroy() async {
     QueryResult result = await serviceLocator.get<GQLClient>().executeQuery(
-      """
+      '''
       mutation(\$input: PeriodsDestroyInput!) {
         destroyOnePeriod(input: \$input) {
           id
@@ -129,7 +129,7 @@ extension PeriodQueries on Period {
           dateFrom
           dateTo
         }
-      }""",
+      }''',
       variables: {
         'input': {'id': id!}
       },

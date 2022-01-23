@@ -13,7 +13,7 @@ class Expense {
     );
   }
 
-  static List<Expense> fromJsonList(jsonList) {
+  static List<Expense> fromJsonList(List<dynamic>? jsonList) {
     if (jsonList == null) return [];
     return jsonList.map<Expense>((json) => Expense.fromJson(json)).toList();
   }

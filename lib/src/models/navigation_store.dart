@@ -25,7 +25,7 @@ class NavigationStore with ChangeNotifier {
   Day? get currentDay => _currentDay;
   bool get loading => _loading;
   List<Expense> get expenses {
-    if (_currentDay == null) throw Exception("Cannot get expenses, since no day has been selected");
+    if (_currentDay == null) throw Exception('Cannot get expenses, since no day has been selected');
     return _currentDay!.expenses;
   }
 
@@ -43,7 +43,7 @@ class NavigationStore with ChangeNotifier {
   }
 
   // TODO: Should reload only expenses from the backend. But reloading the entire period works.
-  //       Reloading expenses and then calling "_calculateAll" (calculate data and notify) also works,
+  //       Reloading expenses and then calling '_calculateAll' (calculate data and notify) also works,
   //       so implement that eventually.
   Future<void> reloadExpenses() async {
     await reloadPeriod();
@@ -67,7 +67,7 @@ class NavigationStore with ChangeNotifier {
     _loading = true;
     notifyListeners();
 
-    debugPrint("Fetching one period (graphql)");
+    debugPrint('Fetching one period (graphql)');
     _currentPeriod = await PeriodQueries.fetchOne(periodId);
     _updateCurrentDayFromCurrentPeriod();
 
@@ -84,7 +84,7 @@ class NavigationStore with ChangeNotifier {
 
   Future<void> reloadPeriod() async {
     if (_currentPeriod == null) {
-      throw Exception("Cannot reload period because it has not been loaded yet");
+      throw Exception('Cannot reload period because it has not been loaded yet');
     }
 
     await loadPeriod(_currentPeriod!.id!);

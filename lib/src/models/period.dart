@@ -94,7 +94,7 @@ class Period {
         dateTo: DateUtil.parseDate(json['dateTo']));
   }
 
-  static List<Period> fromJsonList(jsonList) {
+  static List<Period> fromJsonList(List<dynamic>? jsonList) {
     if (jsonList == null) return [];
     return jsonList.map<Period>((json) => Period.fromJson(json)).toList();
   }

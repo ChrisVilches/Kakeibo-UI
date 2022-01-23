@@ -36,7 +36,7 @@ class Day {
     );
   }
 
-  static List<Day> fromJsonList(jsonList) {
+  static List<Day> fromJsonList(List<dynamic>? jsonList) {
     if (jsonList == null) return [];
     return jsonList.map<Day>((json) => Day.fromJson(json)).toList();
   }
