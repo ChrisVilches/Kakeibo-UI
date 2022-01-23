@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/controllers/day_detail_form_controller.dart';
-import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/services/snackbar_service.dart';
 import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
@@ -17,7 +17,7 @@ class DayDetailFormWidget extends StatelessWidget {
 
   void _submitForm(BuildContext context) async {
     if (await Provider.of<DayDetailFormController>(context, listen: false).submitForm()) {
-      Provider.of<NavigationController>(context, listen: false).reloadPeriod();
+      Provider.of<NavigationStore>(context, listen: false).reloadPeriod();
       SnackbarService.simpleSnackbar(context, 'Updated');
     }
   }
@@ -27,7 +27,7 @@ class DayDetailFormWidget extends StatelessWidget {
     return ChangeNotifierProvider<DayDetailFormController>(
       create: (context) => DayDetailFormController(period: period, day: day),
       builder: (context, _) {
-        final ctrl = Provider.of<DayDetailFormController>(context);
+        final ctrl = Provider.of<DayDetailFormController>(context, listen: false);
 
         final budgetInput = DigitsOnlyInputWidget(
           'Amount remaining in your account',

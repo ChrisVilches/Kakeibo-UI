@@ -41,23 +41,29 @@ class GQLClient {
     bool doThrow = true;
 
     if (_containsErrorCode(errorList, "NOT_LOGGED_IN")) {
-      serviceLocator.get<UserService>().removeToken(TokenRemovalCause.unknown);
+      serviceLocator
+          .get<UserService>()
+          .removeToken(TokenRemovalCause.unknown, triggerSnackbar: false);
       err = NotLoggedInException();
       doThrow = false;
     } else if (_containsErrorCode(errorList, "SIGNATURE_EXPIRED")) {
-      serviceLocator.get<UserService>().removeToken(TokenRemovalCause.sessionExpired);
+      serviceLocator
+          .get<UserService>()
+          .removeToken(TokenRemovalCause.sessionExpired, triggerSnackbar: false);
       err = SignatureExpiredException();
       doThrow = false;
     } else {
       String joinedMessages = errorList.map((GraphQLError e) => e.message).join(", ");
       err = HttpRequestException(joinedMessages);
+
+      // NOTE: Throwing the exception is recommended for GraphQL queries. When a query error happens,
+      //       most queries will throw a different exception when trying to build an object out of
+      //       an empty JSON. Throwing here would raise this one first, which is more useful than
+      //       getting something like a "null error", since it usually contains validation errors
+      //       from the server, etc.
+      doThrow = true;
     }
 
-    // NOTE: Throwing the exception is recommended for GraphQL queries. When a query error happens,
-    //       most queries will throw a different exception when trying to build an object out of
-    //       an empty JSON. Throwing here would raise this one first, which is more useful than
-    //       getting something like a "null error", since it usually contains validation errors
-    //       from the server, etc.
     serviceLocator.get<GlobalErrorHandlerService>().signalError(err, doThrow: doThrow);
   }
 

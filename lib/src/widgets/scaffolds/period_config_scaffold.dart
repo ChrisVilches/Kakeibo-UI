@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/controllers/period_config_controller.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/decoration/form_validators.dart';
@@ -24,7 +24,7 @@ class PeriodConfigScaffold extends StatelessWidget {
           afterRemoveSuccess: (Period deletedPeriod) {
             SnackbarService.simpleSnackbar(context, "Removed: ${deletedPeriod.name}");
             Navigator.popUntil(context, ModalRoute.withName('/'));
-            Provider.of<NavigationController>(context, listen: false).clearData();
+            Provider.of<NavigationStore>(context, listen: false).clearData();
           },
         );
       },
@@ -67,7 +67,7 @@ class PeriodConfigScaffold extends StatelessWidget {
                       if (await ctrl.executePeriodUpdate()) {
                         SnackbarService.simpleSnackbar(context, "Updated period information.");
                         Navigator.of(context).pop();
-                        Provider.of<NavigationController>(context, listen: false).reloadPeriod();
+                        Provider.of<NavigationStore>(context, listen: false).reloadPeriod();
                       }
                     }
                   : null,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/decoration/padding_top_widget.dart';
 import 'package:kakeibo_ui/src/models/day.dart';
@@ -14,8 +14,8 @@ class DayDetailScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Period period = Provider.of<NavigationController>(context).currentPeriod!;
-    Day day = Provider.of<NavigationController>(context).currentDay!;
+    Period period = Provider.of<NavigationStore>(context).currentPeriod!;
+    Day day = Provider.of<NavigationStore>(context).currentDay!;
 
     final String title = "${period.name} - ${DateUtil.formatDateSlash(day.dayDate)}";
 

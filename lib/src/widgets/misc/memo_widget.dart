@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo_ui/src/decoration/format_util.dart';
 
 class MemoWidget extends StatelessWidget {
   final String _text;
+  late final String _shortText = FormatUtil.limitMultilineString(string: _text, maxLines: 3);
 
-  const MemoWidget(this._text, {Key? key}) : super(key: key);
+  MemoWidget(this._text, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      // TODO: What does this "min" do????
-      mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         const SizedBox(
@@ -21,7 +21,7 @@ class MemoWidget extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(left: 25),
             child: Text(
-              _text,
+              _shortText,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(color: Colors.grey),
             ),

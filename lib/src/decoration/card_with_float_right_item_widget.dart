@@ -28,8 +28,7 @@ class CardWithFloatRightItemWidget extends StatelessWidget {
               child: label,
             ),
             SizedBox(
-              width: 100,
-              height: 50,
+              width: 120,
               child: Container(
                 child: rightWidget,
                 alignment: Alignment.centerRight,

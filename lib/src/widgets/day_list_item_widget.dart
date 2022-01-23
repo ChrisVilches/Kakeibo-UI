@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/card_with_float_right_item_widget.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/decoration/format_util.dart';
@@ -20,7 +20,7 @@ class DayListItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nav = Provider.of<NavigationController>(context);
+    final nav = Provider.of<NavigationStore>(context);
     DayData dayData = nav.dayDataForDay(day);
 
     var icon = Icon(Icons.check_rounded,
@@ -53,14 +53,17 @@ class DayListItemWidget extends StatelessWidget {
       );
     }
 
+    final labelColumnChildren = <Widget>[Text(DateUtil.formatDate(day.dayDate))];
+
+    if (day.memo.isNotEmpty) {
+      labelColumnChildren.add(const SizedBox(height: 15));
+      labelColumnChildren.add(MemoWidget(day.memo));
+    }
+
     Widget card = CardWithFloatRightItemWidget(
       icon: icon,
       label: Column(
-        children: <Widget>[
-          Text(DateUtil.formatDate(day.dayDate)),
-          const SizedBox(height: 5),
-          day.memo.isEmpty ? Container() : MemoWidget(day.memo),
-        ],
+        children: labelColumnChildren,
         crossAxisAlignment: CrossAxisAlignment.start,
       ),
       rightWidget: Column(
@@ -71,7 +74,7 @@ class DayListItemWidget extends StatelessWidget {
 
     return InkWell(
       onTap: () async {
-        Provider.of<NavigationController>(context, listen: false).setCurrentDay(day);
+        Provider.of<NavigationStore>(context, listen: false).currentDay = day;
 
         Navigator.of(context)
             .push(

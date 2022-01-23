@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:kakeibo_ui/src/enums/currency_symbol.dart';
 
@@ -19,5 +20,19 @@ class FormatUtil {
   /// Configure the currency formatter globally.
   static void setCurrency(CurrencySymbol newSymbol) {
     _currencySymbol = newSymbol;
+  }
+
+  static String limitMultilineString({required String string, int maxLines = 5}) {
+    const ls = LineSplitter();
+    List<String> lines = ls.convert(string);
+    final result = <String>[];
+
+    for (int i = 0; i < maxLines && i < lines.length; i++) {
+      result.add(lines[i]);
+    }
+
+    final lastNonBlank = result.lastIndexWhere((text) => text.isNotEmpty);
+
+    return result.sublist(0, lastNonBlank + 1).join("\n");
   }
 }

@@ -14,15 +14,22 @@ class SplashScreenView extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreenView> {
   final splashDelay = 2;
+  Timer? _timer;
 
   @override
   initState() {
     super.initState();
 
-    Timer(
+    _timer = Timer(
       Duration(seconds: splashDelay),
       () async => {Navigator.pop(context)},
     );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override

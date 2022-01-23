@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/date_util.dart';
 import 'package:kakeibo_ui/src/models/period.dart';
 import 'package:kakeibo_ui/src/views/period_details_view.dart';
@@ -30,7 +30,7 @@ class PeriodsListMainWidget extends StatelessWidget {
           ),
           leading: const Icon(Icons.monetization_on_outlined, color: Colors.pink, size: 24.0),
           onTap: () async {
-            Provider.of<NavigationController>(context, listen: false).loadPeriod(period.id!);
+            Provider.of<NavigationStore>(context, listen: false).loadPeriod(period.id!);
 
             await Navigator.of(context).pushNamed(PeriodDetailsView.routeName);
             onBackFromDetailView();

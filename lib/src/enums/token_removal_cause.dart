@@ -8,7 +8,7 @@ extension TokenRemovalCauseExtension on TokenRemovalCause {
       case TokenRemovalCause.sessionExpired:
         return 'Your session has expired';
       default:
-        return "Please login";
+        return "You are not logged in";
     }
   }
 }

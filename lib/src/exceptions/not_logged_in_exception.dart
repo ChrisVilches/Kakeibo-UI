@@ -1,6 +1,8 @@
+import 'package:kakeibo_ui/src/enums/token_removal_cause.dart';
+
 class NotLoggedInException implements Exception {
   @override
   String toString() {
-    return "Not logged in";
+    return TokenRemovalCause.unknown.message;
   }
 }

@@ -26,6 +26,14 @@ class GlobalErrorHandlerService {
 
     BuildContext context = _navigatorKey.currentContext!;
 
+    debugPrint(
+        "(global_error_handler_service.dart) Exception caught in '_handleException'. Message: ${err.toString()}, type: ${err.runtimeType}");
+
+    // TODO: Maybe a better way to handle token related exceptions is to just trigger the snackbar
+    //       and the navigation (to the login view) here, and only signal onTokenRemoved for
+    //       manual logouts. This way, all the exceptions are managed here, and it's easier to
+    //       manage what happens when the user's token is removed (there are no multiple cases
+    //       where the snackbar must be either displayed or not displayed).
     switch (err.runtimeType) {
       case HttpRequestException:
         SnackbarService.simpleSnackbar(context, err.toString());

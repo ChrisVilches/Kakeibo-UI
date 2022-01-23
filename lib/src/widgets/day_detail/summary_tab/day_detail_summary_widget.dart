@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/card_with_float_right_item_widget.dart';
 import 'package:kakeibo_ui/src/models/day_data.dart';
 import 'package:kakeibo_ui/src/widgets/misc/projection_widget.dart';
@@ -14,8 +14,8 @@ class DayDetailSummaryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Day day = Provider.of<NavigationController>(context).currentDay!;
-    DayData dayData = Provider.of<NavigationController>(context).dayDataForDay(day);
+    Day day = Provider.of<NavigationStore>(context).currentDay!;
+    DayData dayData = Provider.of<NavigationStore>(context).dayDataForDay(day);
 
     var remainingCard = CardWithFloatRightItemWidget(
       icon: const Icon(Icons.attach_money_rounded),

@@ -11,6 +11,7 @@ class FormValidators {
     try {
       int num = int.parse(value);
       if (num < 0) return 'Enter a positive number';
+      if (num.toRadixString(2).length > 31) return 'The number is too large';
     } catch (_) {
       return 'Enter a number';
     }

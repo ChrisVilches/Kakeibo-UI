@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo_ui/src/controllers/expenses_management_controller.dart';
-import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/decoration/extra_padding_widget.dart';
 import 'package:kakeibo_ui/src/decoration/padding_bottom_widget.dart';
 import 'package:kakeibo_ui/src/services/snackbar_service.dart';
@@ -13,7 +13,7 @@ class ExpenseCreationFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final expensesCtrl = ExpensesManagementController();
-    final navCtrl = Provider.of<NavigationController>(context, listen: false);
+    final nav = Provider.of<NavigationStore>(context, listen: false);
 
     Widget labelInput = TextFormField(
       onChanged: expensesCtrl.onChangeLabel,
@@ -28,12 +28,12 @@ class ExpenseCreationFormWidget extends StatelessWidget {
     Widget submitButton = ElevatedButton.icon(
       onPressed: () async {
         if (await expensesCtrl.submitForm(
-          period: navCtrl.currentPeriod!,
-          day: navCtrl.currentDay!,
+          period: nav.currentPeriod!,
+          day: nav.currentDay!,
         )) {
           SnackbarService.simpleSnackbar(context, "Created");
 
-          navCtrl.reloadPeriod();
+          nav.reloadPeriod();
           expensesCtrl.resetForm();
         }
       },

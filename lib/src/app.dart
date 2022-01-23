@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:kakeibo_ui/src/controllers/navigation_controller.dart';
+import 'package:kakeibo_ui/src/models/navigation_store.dart';
 import 'package:kakeibo_ui/src/views/home_view.dart';
 import 'package:kakeibo_ui/src/views/login_view.dart';
 import 'package:kakeibo_ui/src/views/period_details_view.dart';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       animation: settingsController,
       builder: (BuildContext context, Widget? child) {
         return ChangeNotifierProvider(
-          create: (context) => NavigationController(),
+          create: (context) => NavigationStore(),
           builder: (context, _) => MaterialApp(
             // Providing a restorationScopeId allows the Navigator built by the
             // MaterialApp to restore the navigation stack when a user leaves and
