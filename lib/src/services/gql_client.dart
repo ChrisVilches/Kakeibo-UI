@@ -33,7 +33,11 @@ class GQLClient {
   void _throwErrorsFromQueryResult(QueryResult result) {
     if (!result.hasException) return;
 
-    if (result.exception!.graphqlErrors.isEmpty) throw Exception('An error happened');
+    if (result.exception!.graphqlErrors.isEmpty) {
+      final err = Exception('An error happened');
+      serviceLocator.get<GlobalErrorHandlerService>().signalError(err, doThrow: true);
+      return;
+    }
 
     List<GraphQLError> errorList = result.exception!.graphqlErrors;
 

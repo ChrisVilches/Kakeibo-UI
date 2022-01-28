@@ -67,6 +67,12 @@ class PeriodConfigScaffold extends StatelessWidget {
                     onChanged: ctrl.onChangedDailyExpenses,
                     initialValue: ctrl.dailyExpensesValue,
                   ),
+                  DigitsOnlyInputWidget(
+                    'Total fixed expenses',
+                    onChanged: ctrl.onChangedTotalFixedExpenses,
+                    initialValue: ctrl.totalFixedExpenses,
+                    hintText: 'Rent, bills, etc...',
+                  ),
                 ],
               ),
             ),

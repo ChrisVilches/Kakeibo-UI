@@ -35,6 +35,7 @@ extension PeriodQueries on Period {
           initialMoney
           dailyExpenses
           savingsPercentage
+          totalFixedExpenses
           days {
             id
             memo

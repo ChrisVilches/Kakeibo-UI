@@ -12,6 +12,7 @@ class Period {
   final int? salary;
   final int? dailyExpenses;
   final int? savingsPercentage;
+  final int? totalFixedExpenses;
 
   Period(
       {this.id,
@@ -20,6 +21,7 @@ class Period {
       this.dailyExpenses,
       this.initialMoney,
       this.savingsPercentage,
+      this.totalFixedExpenses,
       this.days = const [],
       this.fullDays = const [],
       this.dateFrom,
@@ -38,7 +40,7 @@ class Period {
   }
 
   int useablePerDay() {
-    return (useable() / fullDays.length).round();
+    return ((useable() - totalFixedExpenses!) / fullDays.length).round();
   }
 
   int limit() {
@@ -74,6 +76,7 @@ class Period {
         'initialMoney': initialMoney,
         'dailyExpenses': dailyExpenses,
         'savingsPercentage': savingsPercentage,
+        'totalFixedExpenses': totalFixedExpenses,
         'dateFrom': dateFrom == null ? null : DateUtil.formatDate(dateFrom!),
         'dateTo': dateTo == null ? null : DateUtil.formatDate(dateTo!)
       };
@@ -89,6 +92,7 @@ class Period {
         salary: json['salary'],
         initialMoney: json['initialMoney'],
         dailyExpenses: json['dailyExpenses'],
+        totalFixedExpenses: json['totalFixedExpenses'],
         savingsPercentage: json['savingsPercentage'],
         dateFrom: DateUtil.parseDate(json['dateFrom']),
         dateTo: DateUtil.parseDate(json['dateTo']));

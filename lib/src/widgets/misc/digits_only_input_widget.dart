@@ -7,10 +7,16 @@ class DigitsOnlyInputWidget extends StatelessWidget {
   final String? initialValue;
   final bool required;
   final void Function(String?) onChanged;
+  final String hintText;
 
-  const DigitsOnlyInputWidget(this._label,
-      {Key? key, this.required = true, required this.onChanged, this.initialValue})
-      : super(key: key);
+  const DigitsOnlyInputWidget(
+    this._label, {
+    Key? key,
+    this.required = true,
+    required this.onChanged,
+    this.initialValue,
+    this.hintText = '',
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +26,7 @@ class DigitsOnlyInputWidget extends StatelessWidget {
       keyboardType: TextInputType.number,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       validator: required ? FormValidators.amountValidator : null,
-      decoration: InputDecoration(labelText: _label),
+      decoration: InputDecoration(labelText: _label, hintText: hintText),
     );
   }
 }

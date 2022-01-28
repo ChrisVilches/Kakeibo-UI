@@ -26,7 +26,7 @@ class DayDetailFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<DayDetailFormController>(
-      create: (context) => DayDetailFormController(period: period, day: day),
+      create: (_) => DayDetailFormController(period: period, day: day),
       builder: (context, _) {
         final ctrl = Provider.of<DayDetailFormController>(context, listen: false);
 

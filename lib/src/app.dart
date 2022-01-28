@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
     return AnimatedBuilder(
       animation: settingsController,
       builder: (BuildContext context, Widget? child) {
-        return ChangeNotifierProvider(
-          create: (context) => NavigationStore(),
+        return ChangeNotifierProvider<NavigationStore>(
+          create: (_) => NavigationStore(),
           builder: (context, _) => MaterialApp(
             // Providing a restorationScopeId allows the Navigator built by the
             // MaterialApp to restore the navigation stack when a user leaves and

@@ -33,6 +33,8 @@ class GlobalErrorHandlerService {
     //       manual logouts. This way, all the exceptions are managed here, and it's easier to
     //       manage what happens when the user's token is removed (there are no multiple cases
     //       where the snackbar must be either displayed or not displayed).
+
+    // TODO: All cases are the same. Refactor?
     switch (err.runtimeType) {
       case HttpRequestException:
         serviceLocator.get<SnackbarService>().simpleSnackbar(err.toString());
@@ -41,6 +43,9 @@ class GlobalErrorHandlerService {
         serviceLocator.get<SnackbarService>().simpleSnackbar(err.toString());
         break;
       case SignatureExpiredException:
+        serviceLocator.get<SnackbarService>().simpleSnackbar(err.toString());
+        break;
+      default:
         serviceLocator.get<SnackbarService>().simpleSnackbar(err.toString());
     }
   }

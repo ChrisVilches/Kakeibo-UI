@@ -38,6 +38,10 @@ class NavigationStore with ChangeNotifier {
     return _currentPeriod != null;
   }
 
+  // TODO: Maybe this can be moved to a different provider and use a ProxyProvider.
+  //       The first type is the NavigationStore, and the second one the DayData. Then the
+  //       ProxyProvider creates the day data from the NavigationStore. That'd be good to
+  //       divide this class because it's too cluttered.
   DayData dayDataForDay(Day day) {
     return _dayDataList.firstWhere((DayData dayData) => dayData.day.dayDate == day.dayDate);
   }

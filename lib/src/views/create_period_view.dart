@@ -67,7 +67,7 @@ class CreatePeriodView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CreatePeriodController>(
-      create: (context) => CreatePeriodController(),
+      create: (_) => CreatePeriodController(),
       builder: (context, _) => form(context),
     );
   }

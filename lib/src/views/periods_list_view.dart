@@ -6,6 +6,7 @@ import 'package:kakeibo_ui/src/views/create_period_view.dart';
 import 'package:kakeibo_ui/src/views/settings_view.dart';
 import 'package:kakeibo_ui/src/widgets/periods_list/empty_periods_list_widget.dart';
 import 'package:kakeibo_ui/src/widgets/periods_list/periods_list_main_widget.dart';
+import 'package:kakeibo_ui/src/widgets/scaffolds/generic_error_scaffold.dart';
 
 class PeriodsListView extends StatefulWidget {
   static const routeName = '/period_list';
@@ -33,7 +34,7 @@ class _PeriodListState extends State<PeriodsListView> with SingleTickerProviderS
           default:
             if (snapshot.hasError) {
               debugPrint(snapshot.error.toString());
-              return const Text('Error');
+              return GenericErrorScaffold();
             } else {
               return _PeriodList(snapshot: snapshot, triggerReload: _triggerReload);
             }

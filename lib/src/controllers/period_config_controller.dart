@@ -13,6 +13,7 @@ class PeriodConfigController with ChangeNotifier {
   late String _dailyExpensesValue = period.dailyExpenses.toString();
   late String _initialMoneyValue = period.initialMoney.toString();
   late String _nameValue = period.name ?? '';
+  late String _totalFixedExpenses = period.totalFixedExpenses.toString();
   bool _submitting = false;
   bool _formChanged = false;
 
@@ -20,6 +21,7 @@ class PeriodConfigController with ChangeNotifier {
   String get savingsPercentageValue => _savingsPercentageValue;
   String get dailyExpensesValue => _dailyExpensesValue;
   String get initialMoneyValue => _initialMoneyValue;
+  String get totalFixedExpenses => _totalFixedExpenses;
   String get nameValue => _nameValue;
   bool get submitting => _submitting;
   GlobalKey<FormState> get formKey => _formKey;
@@ -60,6 +62,11 @@ class PeriodConfigController with ChangeNotifier {
     formChanged();
   }
 
+  void onChangedTotalFixedExpenses(String? text) {
+    _totalFixedExpenses = text ?? '';
+    formChanged();
+  }
+
   Future<bool> executePeriodUpdate() async {
     if (!_formKey.currentState!.validate()) return false;
     _submitting = true;
@@ -67,12 +74,14 @@ class PeriodConfigController with ChangeNotifier {
 
     try {
       Period periodChanged = Period(
-          id: period.id,
-          name: _nameValue,
-          salary: int.parse(_salaryValue),
-          dailyExpenses: int.parse(_dailyExpensesValue),
-          savingsPercentage: int.parse(_savingsPercentageValue),
-          initialMoney: int.parse(_initialMoneyValue));
+        id: period.id,
+        name: _nameValue,
+        salary: int.parse(_salaryValue),
+        dailyExpenses: int.parse(_dailyExpensesValue),
+        savingsPercentage: int.parse(_savingsPercentageValue),
+        initialMoney: int.parse(_initialMoneyValue),
+        totalFixedExpenses: int.parse(_totalFixedExpenses),
+      );
 
       await PeriodQueries.update(periodChanged);
       return true;

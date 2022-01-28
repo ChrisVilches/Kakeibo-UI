@@ -46,14 +46,15 @@ class TableCalculator {
 
       if (day.budget == null) {
         result.add(currValue);
+        expenseAccum = 0;
       } else {
         result.add(null);
         currValue = remainingList[i]!;
-        expenseAccum = 0;
       }
 
       currValue -= period.dailyExpenses!;
     }
+
     return result;
   }
 
@@ -94,8 +95,12 @@ class TableCalculator {
 
   static List<int> _getBurndown(Period period) {
     List<int> result = [];
+
+    int perDay = period.useablePerDay();
+    int useable = period.useable() - period.totalFixedExpenses! - perDay;
+
     for (int i = 0; i < period.fullDays.length; i++) {
-      int value = period.useable() - ((i + 1) * period.useablePerDay());
+      int value = useable - (i * perDay);
       result.add(value);
     }
     return result;
