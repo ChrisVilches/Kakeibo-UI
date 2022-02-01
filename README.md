@@ -1,8 +1,8 @@
-# Kakeibo UI
+# Kakeibo (UI)
 
 A simple money management app made in Flutter.
 
-It's basically the same process I used to do in Excel, but converted to a mobile/desktop app.
+It's basically the same process I used to do in Excel, but turned into a mobile app.
 
 ## System dependencies
 
