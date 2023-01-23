@@ -25,6 +25,9 @@ class _PeriodListState extends State<PeriodsListView> with SingleTickerProviderS
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
+      // TODO: The "fetchAll" would execute multiple times here. Extract it and put it outside.
+      // https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html
+      // https://stackoverflow.com/questions/52249578/how-to-deal-with-unwanted-widget-build
       future: PeriodQueries.fetchAll(),
       builder: (BuildContext context, AsyncSnapshot<List<Period>> snapshot) {
         switch (snapshot.connectionState) {
